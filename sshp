@@ -1,0 +1,4901 @@
+#!/bin/bash
+# Created By Matthew Fales
+# Fully Free Use 
+# You provide information when ask password and e Name and it signs you in.
+# You pass and E name are local to the code and no where else
+# You can make it new without my name on it or add onto it i don't care enjoy
+# For use of ssh in CS Building lab computers
+# you can choose to but . sh at the end but not needed
+#**********************************Goals******************************************************************************
+# This program was created to give the user options on how ssh in the schools computers.
+# Yes is is using brute force methods to get this job completed.
+# But the time with out loops would be faster because because it is handling the commands one by one
+# yes it looks ugly but with the ssh checking the the user on takes a while so simpliest way is better
+# added a fix for when CSU computer do a reset on ssh keys as long as they don't move the place of the file this should work
+#*****************************************How to install **************************************************************
+# file path for linux /usr/local/bin/   this will allow you to use this as simple command like sshn
+# on macs /bin:/usr/local/bin:  or check it out https://stackoverflow.com/questions/18682413/where-do-you-keep-your-own-scripts-on-osx
+#*******************************************For macs you need sshpass**************************************************
+# brew install https://raw.githubusercontent.com/kadwanev/bigboybrew/master/Library/Formula/sshpass.rb
+#*******************************************for linux you need sshpass and fping***************************************
+# sudo apt-get install sshpass
+# sudo apt-get install fping
+#****************************************** to replace th old one******************************************************
+# sudo mv sshp /usr/local/bin/
+# chmod 755 /usr/local/bin/sshp
+#------------------------------------------------------------------------------
+#Version 1.1 Release 09/21/18 
+#Version 2.0 Release 10/26/18
+#Version 3.0 Release 11/08/18
+#Version 3.5 Release 11/09/18
+#Version 4.0 Release 01/11/19
+#====================main information=====================================
+
+
+fact[0]="***Quick Fact: Night of broken glass or Kristallnacht happeen  Nov 9, 1938 – Nov 10, 1938.
+Learn more:https://en.wikipedia.org/wiki/Kristallnacht***"
+fact[1]="***Quick Fact: The Two nuclear bombs drop on Hiroshima and Nagasaki killed a total of 230,000 poeple in seconds.
+Learn more: https://en.wikipedia.org/wiki/Atomic_bombings_of_Hiroshima_and_Nagasaki***"
+fact[2]="***Quick Fact: Julius Caesar was killed on March 15, 44 BC, Rome, Italy by his friend Marcus Junius Brutus.
+Learn more: https://en.wikipedia.org/wiki/Assassination_of_Julius_Caesar***"
+fact[3]="***Quick Fact: Then USA Civil started April 12, 1861 claiming 750,000 lives.
+Learn more: https://en.wikipedia.org/wiki/American_Civil_War***"
+fact[4]="***Quick Fact: Franklin D. Roosevelt was in office from March 4, 1933 – April 12, 1945 and died into his 4th term.  Term limits were put in for this reason.
+Learn more: https://en.wikipedia.org/wiki/Franklin_D._Roosevelt***"
+fact[5]="***Quick Fact: Stock Market Crash October 24 (Black Thursday) and continued until October 29, 1929 (Black Tuesday) Fell Close to 25% of the value which by 1933 put USA into depression with 30% unemployment.
+Learn more: https://en.wikipedia.org/wiki/Wall_Street_Crash_of_1929***"
+fact[6]="***Quick Fact: Colorado became a state on August 1, 1876
+Learn more: https://en.wikipedia.org/wiki/History_of_Colorado***"
+fact[7]="***Quick Fact: Colorado state flower is the blue columbine, Colorado state bird is the Lark bunting, Colorado state tree is the Blue spruce, Colorado state animal Bighorn Sheep
+Learn more: https://awesomeamerica.com/colorado/***"
+fact[8]="***Quick Fact: The Wall Berlin lasted from August 1961 to November 9, 1989 getting torn down due to mis communication with a head of state that translated something wrong. 
+This was going to happen but due to this this mistake of a head of state if fell faster than expected
+Learn more: https://en.wikipedia.org/wiki/Berlin_Wall***"
+fact[9]="***Quick Fact: Lockheed SR-71 Blackbird was made in 1966 and is known as the fastes plan ever made. There is alot of questions of if it was made earlier and how did technology pop up so fast .
+Top speed at 2,193.2mph or 3529.613261kph
+Learn more: https://en.wikipedia.org/wiki/Lockheed_SR-71_Blackbird***"
+fact[10]="***Quick Fact: Hitler came to power on January 30, 1933 with 36.8% (13,418,540 million votes) of the total vote.
+Learn more: https://en.wikipedia.org/wiki/Adolf_Hitler%27s_rise_to_power***"
+fact[11]="***Quick Fact: Most powerful hurrican winds Patricia at 345 km/h (215 mph)
+Learn more: https://en.wikipedia.org/wiki/List_of_the_most_intense_tropical_cyclones***"
+fact[12]="***Quick Fact: Storngest Tornado 302 ± 20 mph (486 ± 32 km/h) 1999 Bridge Creek–Moore tornado.
+Learn more: https://en.wikipedia.org/wiki/Tornado_records***"
+fact[13]="***Quick Fact: Fastes wind ever recored from a storm 113.2 m/s or 407 km/h (253 mph) 3-second gust location Barrow Island (Western Australia).
+Learn more: https://en.wikipedia.org/wiki/List_of_weather_records***"
+fact[14]="***Quick Fact: Most snow in 24 hours 2.56 meters (100.8 inches) in Capracotta, Italy on 5 March 2015.
+Learn more: https://en.wikipedia.org/wiki/List_of_weather_records***"
+fact[15]="***Quick Fact: Biggest Hail stone ever 47.3 cm (18.625 in) circumference; Vivian, South Dakota, 23 July 2010. There was unconfirmed report of it in Montana of the size of soccer balls.
+Learn more: https://en.wikipedia.org/wiki/List_of_weather_records***"
+fact[16]="***Quick Fact: Biggest Bear on earth Kodiak Bear 680 kg (1,500 lb) or Polar Bear 350–700 kg (772–1,543 lb).
+Learn more: https://en.wikipedia.org/wiki/Polar_bear ***"
+fact[17]="***Quick Fact: Oldest animale on earth Ctenophores (Comb Jellies) 700 million years.
+Learn more: http://www.oldest.org/animals/species/***"
+fact[18]="***Quick Fact: Younger the doctor is less chance of wrong diagnoses***"
+fact[19]="***Quick Fact: Vietnam, The country’s name was originally spelled as two words, Viet Nam.***"
+fact[20]="***Quick Fact: Vietnam, Their flag consists of a golden star with five points to represent farmers, workers, intellectuals, youth, and soldiers. The red background pays tribute to the bloodshed during the wars.***"
+fact[21]="***Quick Fact: Vietnam exports Fish: 5.8 billion dollars (2%) of there GDP which is mostly from farmed raised fish, they rank third behind Norway and China.***"
+fact[22]="***Quick Fact: The Chinese invented paper, gunpowder, which is a well-known fact, the compass, and the art of printing. The silk road helped moved it.***"
+fact[23]="***Quick Fact: The mortar used to bind the Great Wall’s stones was made with sticky rice!***"
+fact[24]="***Quick Fact: China’s giant pandas are good swimmers.***"
+fact[25]="***Quick Fact: Many Chinese emperors considered themselves to be descendants of dragons.***"
+fact[26]="***Quick Fact: Half of all pigs on earth live in China hmm mostly food.***"
+fact[27]="***Quick Fact: Kanata is made with  tamahagane or known jewel steel made from refined iron sand.***"
+fact[28]="***Quick Fact: Lonsdaleite is made of carbon atoms and w-BN consists of boron and nitrogen atoms whic his 58% harder than diamond.***"
+fact[29]="***Quick Fact: Heaviest Material in the world is Osmium 2 times heavier than than lead. Plutonium is heaviest element.***"
+fact[30]="***Quick Fact: Cobalt bomb is nulcear type of bomb to spread so much radiation it can kill 2,000 square miles of population (3218.688km)***"
+
+
+
+
+
+
+
+
+
+while [ true ]
+do
+flag="false"
+
+while [ "$flag" = "false" ]
+do
+
+echo "
+SSH into CS Buidling Computers
+=============================================================================
+All data should be return in no more than 25 seconds
+If some data doesn't come back there is chance the process didn't 
+come back in time. Now it is a zombie. So leave the zombie alone.
+If this happens a lot the sleep needs to be increase. 
+=============================================================================
+For Lab 120  use command: 120 | USA Capitals
+For Lab 120A use command: 120a| Other Cities 
+For Lab 120E use command: 120e| Planets
+For Lab 215  use command: 215 | World Capitals
+For Lab 225  use command: 225 | Colorado Ski areas
+For Lab 315  use command: 315 | Cars (Works some of the time)
+For Lab 325  use command: 325 | Fish
+For Lab 475  use command: 475 | Other name not working most of the time
+--------------------------------------------------------------
+To delete the current user information use command: del
+Info for lab computer use: info
+--------------------------------------------------------------
+Trouble logging in the key may have to be reset: fix
+--------------------------------------------------------------
+To exit use: exit
+============================================================================"
+
+#---------------------read in stuff-------------------------
+
+
+read -p "Enter the lab you want to use: " input
+read -p "Are you are new user (y or n): " newuser
+
+
+if [ "$input" = "exit" ] || [ "$input" = "exit()" ] || [ "$input" = "exit(1)" ] || [ "$input" = "q" ] || [ "$input" = "quit" ] || [ "$input" = "quit()" ] || [ "$input" = "quit(1)" ] || [ "$input" = "stop" ];
+	then
+	exit 1 
+	fi
+
+
+if [ "$input" = "120" ] || [ "$input" = "120a" ] || [ "$input" = "120e" ]|| [ "$input" = "215" ]|| [ "$input" = "225" ]|| [ "$input" = "315" ]|| [ "$input" = "325" ]|| [ "$input" = "475" ]|| [ "$input" = "info" ] || [ "$input" = "del" ]|| [ "$input" = "fix" ]|| [ "$input" = "Fix" ];
+then
+flag="true"
+if [ "$input" = "del" ];
+then
+cd
+chmod u+rwx ~/name.txt
+chmod g+rwx ~/name.txt
+chmod o+rwx ~/name.txt
+chmod a+rwx ~/name.txti
+chmod u+rwx ~/pass.txt
+chmod g+rwx ~/pass.txt
+chmod o+rwx ~/pass.txt
+chmod a+rwx ~/pass.txt
+echo "junk" > ~/name.txt
+echo "junk" > ~/pass.txt
+echo "***********************************************"
+echo  "User data has been deleted"
+echo "***********************************************"
+flag="false"
+fi
+else
+flag="false"
+echo "************************************************"
+echo "Your input of $input is not right"
+echo "Please put number in that you see in the table"
+echo "You need to put in something like 120 or 120a"
+echo "Try Again"
+echo "************************************************"
+fi
+done
+whom=$(whoami)
+if [ "$input" = "info" ];
+then
+&>/dev/null
+else
+if [ "$newuser" = "y" ] || [ "$newuser" = "Y" ] || [ "$newuser" = "yes" ] || [ "$newuser" = "ye" ] || [ "$newuser" = "YES" ] || [ "$newuser" = "Yes" ];
+then
+read -p "Enter Your E Name: " name
+read -s -p "Enter Your Password: "  pass
+chmod u+rwx ~/name.txt
+chmod g+rwx ~/name.txt
+chmod o+rwx ~/name.txt
+chmod a+rwx ~/name.txt
+chmod u+rwx ~/pass.txt
+chmod g+rwx ~/pass.txt
+chmod o+rwx ~/pass.txt
+chmod a+rwx ~/pass.txt
+echo $name > ~/name.txt
+echo $pass > ~/pass.txt
+chmod u-rwx ~/name.txt
+chmod g-rwx ~/name.txt
+chmod o-rwx ~/name.txt
+chmod a-rwx ~/name.txt
+chmod u-rwx ~/pass.txt
+chmod g-rwx ~/pass.txt
+chmod o-rwx ~/pass.txt
+chmod a-rwx ~/pass.txt
+fi
+
+
+if [ "$newuser" = "n" ] || [ "$newuser" = "No" ] || [ "$newuser" = "NO" ] || [ "$newuser" = "N" ];
+then
+chmod u+rwx ~/name.txt
+chmod g+rwx ~/name.txt
+chmod o+rwx ~/name.txt
+chmod a+rwx ~/name.txt
+chmod u+rwx ~/pass.txt
+chmod g+rwx ~/pass.txt
+chmod o+rwx ~/pass.txt
+chmod a+rwx ~/pass.txt
+name=$(cat ~/name.txt)
+pass=$(cat ~/pass.txt)
+chmod u-rwx ~/name.txt
+chmod g-rwx ~/name.txt
+chmod o-rwx ~/name.txt
+chmod a-rwx ~/name.txt
+chmod u-rwx ~/pass.txt
+chmod g-rwx ~/pass.txt
+chmod o-rwx ~/pass.txt
+chmod a-rwx ~/pass.txt
+
+
+if [ "$name" = "junk" ] && [ "$pass" = "junk" ];
+then
+echo "You password file has nothing save please input your information " 
+read -p "Enter Your E Name: " name
+read -s -p "Enter Your Password: "  pass
+chmod u+rwx ~/name.txt
+chmod g+rwx ~/name.txt
+chmod o+rwx ~/name.txt
+chmod a+rwx ~/name.txt
+chmod u+rwx ~/pass.txt
+chmod g+rwx ~/pass.txt
+chmod o+rwx ~/pass.txt
+chmod a+rwx ~/pass.txt
+echo $name > ~/name.txt
+echo $pass > ~/pass.txt
+chmod u-rwx ~/name.txt
+chmod g-rwx ~/name.txt
+chmod o-rwx ~/name.txt
+chmod a-rwx ~/name.txt
+chmod u-rwx ~/pass.txt
+chmod g-rwx ~/pass.txt
+chmod o-rwx ~/pass.txt
+chmod a-rwx ~/pass.txt
+fi
+
+
+
+
+	
+fi
+
+fi	
+
+
+
+if [ "$name" = "exit" ] || [ "$name" = "exit()" ] || [ "$name" = "exit(1)" ] || [ "$name" = "q" ] || [ "$name" = "quit" ] || [ "$name" = "quit()" ] || [ "$name" = "quit(1)" ] || [ "$name" = "stop" ];
+	then
+	exit 1 
+	fi
+
+if [ "$input" = "fix" ];
+	then
+echo "fixing"
+	arr[0]="albany"
+	arr[1]="annapolis"
+	arr[2]="atlanta"
+	arr[3]="augusta"
+	arr[4]="austin"
+	arr[5]="baton-rouge"
+	arr[6]="bismarck"
+	arr[7]="boise"
+	arr[8]="boston"
+	arr[9]="carson-city"
+	arr[10]="charleston"
+	arr[11]="cheyenne"
+	arr[12]="columbia" 
+	arr[13]="columbus-oh"
+	arr[14]="concord"
+	arr[15]="denver" 
+	arr[16]="des-moines"
+	arr[17]="dover"
+	arr[18]="frankfort"
+	arr[19]="harrisburg"
+	arr[20]="hartford" 
+	arr[21]="helena"
+	arr[22]="honolulu"
+	arr[23]="indianapolis"
+	arr[24]="jackson" 
+	arr[25]="jefferson-city"
+	arr[26]="juneau" 
+	arr[27]="lansing" 
+	arr[28]="lincoln" 
+	arr[29]="little-rock"
+	arr[30]="madison"
+	arr[31]="montgomery"
+	arr[32]="montpelier"
+	arr[33]="nashville"
+	arr[34]="oklahoma-city"
+	arr[35]="olympia" 
+	arr[36]="phoenix"
+	arr[37]="pierre" 
+	arr[38]="providence"
+	arr[39]="raleigh"
+	arr[40]="richmond"
+	arr[41]="sacramento" 
+	arr[42]="saint-paul"
+	arr[43]="salem"
+	arr[44]="salt-lake-city"
+	arr[45]="santa-fe"
+	arr[46]="springfield"
+	arr[47]="tallahassee"
+	arr[48]="topeka"
+	arr[49]="trenton"
+	arr[50]="washington-dc"
+	arr[51]="earth"
+	arr[52]="jupiter"
+	arr[53]="mars"
+	arr[54]="mercury"
+	arr[55]="neptune"
+	arr[56]="saturn"
+	arr[57]="uranus"
+	arr[58]="venus"
+	arr[59]="ankara"
+	arr[60]="baghdad"
+	arr[61]="bangkok"
+	arr[62]="beijing"
+	arr[63]="berlin"
+	arr[64]="bogota"
+	arr[65]="cairo"
+	arr[66]="damascus"
+	arr[67]="dhaka"
+	arr[68]="hanoi"
+	arr[69]="hong-kong"
+	arr[70]="jakarta"
+	arr[71]="kabul"
+	arr[72]="kinshasa"
+	arr[73]="lima"
+	arr[74]="london"
+	arr[75]="madrid"
+	arr[76]="mexico-city"
+	arr[77]="moscow"
+	arr[78]="pyongyang"
+	arr[79]="riyadh"
+	arr[80]="santiago"
+	arr[81]="seoul"
+	arr[82]="singapore"
+	arr[83]="tehran"
+	arr[84]="tokyo"
+	arr[85]="a-basin"
+	arr[86]="ajax"
+	arr[87]="beaver-creek"
+	arr[88]="breckenridge"
+	arr[89]="buttermilk"
+	arr[90]="cooper"
+	arr[91]="copper-mtn"
+	arr[92]="crested-butte"
+	arr[93]="eldora"
+	arr[94]="grandby-ranch"
+	arr[95]="aspen-highlands"
+	arr[96]="howelsen-hil"
+	arr[97]="keystone"
+	arr[98]="loveland"
+	arr[99]="mary-jane"
+	arr[100]="monarch"
+	arr[101]="powderhorn"
+	arr[102]="purgatory"
+	arr[103]="silverton"
+	arr[104]="snowmass"
+	arr[105]="steamboat"
+	arr[106]="sunlight"
+	arr[107]="telluride"
+	arr[108]="vail"
+	arr[109]="winter-park"
+	arr[110]="wolf-creek"
+	arr[111]="anchovy"
+	arr[112]="barracuda"
+	arr[113]="blowfish"
+	arr[114]="bonito"
+	arr[115]="brill"
+	arr[116]="bullhead"
+	arr[117]="char"
+	arr[118]="cod"
+	arr[119]="dorado"
+	arr[120]="eel"
+	arr[121]="flounder"
+	arr[122]="grouper"
+	arr[123]="halibut"
+	arr[124]="herring"
+	arr[125]="mackerel"
+	arr[126]="marlin"
+	arr[127]="perch"
+	arr[128]="pollock"
+	arr[129]="sardine"
+	arr[130]="shark"
+	arr[131]="sole"
+	arr[132]="swordfish"
+	arr[133]="tarpon"
+	arr[134]="turbot"
+	arr[135]="tuna"
+	arr[136]="wahoo"
+	arr[137]="corvette"	
+	arr[138]="mustang"		
+	arr[139]="yam"		
+	arr[140]="zucchini"	
+	arr[141]="durango"	
+	arr[142]="creede"	
+	arr[143]="phi"	
+	arr[144]="chi"
+	arr[145]="psi"
+	arr[146]="bentley"	
+	arr[147]="bugatti"		
+	arr[148]="ferrari"		
+	arr[149]="jaguar"	
+	arr[150]="lamborghini"	
+	arr[151]="lotus"	
+	arr[152]="maserati"	
+	arr[153]="porsche"
+#key="ssh-keygen -f '/home/$name/.ssh/known_hosts' -R '$na1.cs.colostate.edu'"
+for i in "${arr[@]}"
+do 
+key="ssh-keygen -f '/home/$name/.ssh/known_hosts' -R '$i.cs.colostate.edu'"
+eval $key
+done
+
+
+
+fi
+
+
+
+
+
+
+
+
+	
+#-----------------------------------------------------------
+	if [ "$input" = "120" ];
+	then
+rand=$[ $RANDOM % 30 ]
+echo ${fact[$rand]} 
+	echo ""
+#------------------------Var--------------------------------
+#This for the string to be built base on what need to be inputed 
+	START_TIME=$SECONDS
+	p1="sshpass -p "
+	p2="'"
+	p3="'"
+	p4=" ssh -q -o "
+	p5="'"
+	p6="StrictHostKeyChecking"
+	p7=" no"
+	p8="'"
+	p9=" -X "
+	p10="@"
+	p11=".cs.colostate.edu"
+	p12=" 'who | wc -l' "
+	sp=" "
+#-------------Cities------------------------------------
+	na1="albany"
+	na2="annapolis"
+	na3="atlanta"
+	na4="augusta"
+	na5="austin"
+	na6="baton-rouge"
+	na7="bismarck"
+	na8="boise"
+	na9="boston"
+	na10="carson-city"
+	na11="charleston"
+	na12="cheyenne"
+	na13="columbia" 
+	na14="columbus-oh"
+	na15="concord"
+	na16="denver" 
+	na17="des-moines"
+	na18="dover"
+	na19="frankfort"
+	na20="harrisburg"
+	na21="hartford" 
+	na22="helena"
+	na23="honolulu"
+	na24="indianapolis"
+	na25="jackson" 
+	na26="jefferson-city"
+	na27="juneau" 
+	na28="lansing" 
+	na29="lincoln" 
+	na30="little-rock"
+	na31="madison"
+	na32="montgomery"
+	na33="montpelier"
+	na34="nashville"
+	na35="oklahoma-city"
+	na36="olympia" 
+	na37="phoenix"
+	na38="pierre" 
+	na39="providence"
+	na40="raleigh"
+	na41="richmond"
+	na42="sacramento" 
+	na43="saint-paul"
+	na44="salem"
+	na45="salt-lake-city"
+	na46="santa-fe"
+	na47="springfield"
+	na48="tallahassee"
+#----------------------------------------------------------------------
+
+	ex="|"
+#------------------------------to check the amount of users on the computers------------------------------------------
+# format  m1=$(eval $number$p12)$ex
+# Format sshpass -p '$pass' ssh -q -o 'StrictHostKeyChecking no' $user@albany.cs.colostate.edu 'who | wc -l' 
+# this combines both commands  to make easy to get in then it grabs who iso n the computer to give give that data back to the user
+number=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$na1$p11
+number1=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$na2$p11
+number2=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$na3$p11
+number3=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$na4$p11
+number4=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$na5$p11
+number5=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$na6$p11
+number6=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$na7$p11
+number7=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$na8$p11
+number8=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$na9$p11
+number9=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$na10$p11
+number10=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$na11$p11
+number11=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$na12$p11
+
+
+eval $number$p12   > /tmp/tmp &
+eval $number1$p12 > /tmp/tmp1 &
+eval $number2$p12 > /tmp/tmp2 &
+eval $number3$p12 > /tmp/tmp3 &
+eval $number4$p12 > /tmp/tmp4 &
+eval $number5$p12 > /tmp/tmp5 &       
+eval $number6$p12 > /tmp/tmp6 &		
+eval $number7$p12 > /tmp/tmp7 &		
+eval $number8$p12 > /tmp/tmp8 &
+eval $number9$p12 > /tmp/tmp9 &
+eval $number10$p12 > /tmp/tmp10 &	
+eval $number11$p12 > /tmp/tmp11 &			
+sleep 2
+m1=$(cat '/tmp/tmp')	
+m2=$(cat '/tmp/tmp1')	
+m3=$(cat '/tmp/tmp2')	
+m4=$(cat '/tmp/tmp3')	
+m5=$(cat '/tmp/tmp4')	
+m6=$(cat '/tmp/tmp5')	
+m7=$(cat '/tmp/tmp6')	
+m8=$(cat '/tmp/tmp7')	
+o1=$(cat '/tmp/tmp8')	
+o2=$(cat '/tmp/tmp9')	
+o3=$(cat '/tmp/tmp10')	
+o4=$(cat '/tmp/tmp11')	
+
+m1="$m1$ex"
+m2="$m2$ex"
+m3="$m3$ex"
+m4="$m4$ex"
+m5="$m5$ex"
+m6="$m6$ex"
+m7="$m7$ex"
+m8="$m8$ex"
+o1="$o1$ex"
+o2="$o2$ex"
+o3="$o3$ex"
+o4="$o4$ex"
+		
+rm /tmp/tmp  	
+rm /tmp/tmp1		
+rm /tmp/tmp2		
+rm /tmp/tmp3		
+rm /tmp/tmp4		
+rm /tmp/tmp5
+rm /tmp/tmp6
+rm /tmp/tmp7
+rm /tmp/tmp8
+rm /tmp/tmp9
+rm /tmp/tmp10
+rm /tmp/tmp11		
+#using this as tim stamp then you know it is doing something when it is checking th the hosts
+			ELAPSED_TIME=$(($SECONDS - $START_TIME))
+			echo -e "25%:  $ELAPSED_TIME Seconds"
+
+
+
+number=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$na13$p11
+number1=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$na14$p11
+number2=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$na15$p11
+number3=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$na16$p11
+number4=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$na17$p11
+number5=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$na18$p11
+number6=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$na19$p11
+number7=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$na20$p11
+number8=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$na21$p11
+number9=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$na22$p11
+number10=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$na23$p11
+number11=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$na24$p11
+number12=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$na25$p11
+
+eval $number$p12 > /tmp/tmp   &
+eval $number1$p12 > /tmp/tmp1  &
+eval $number2$p12 > /tmp/tmp2  &
+eval $number3$p12 > /tmp/tmp3  &
+eval $number4$p12 > /tmp/tmp4  &
+eval $number5$p12 > /tmp/tmp5  &
+eval $number6$p12 > /tmp/tmp6  &
+eval $number7$p12 > /tmp/tmp7  &
+eval $number8$p12 > /tmp/tmp8  &
+eval $number9$p12 > /tmp/tmp9  &
+eval $number10$p12 > /tmp/tmp10 &
+eval $number11$p12 > /tmp/tmp11 &
+eval $number12$p12 > /tmp/tmp12 &
+sleep 2
+o5=$(cat '/tmp/tmp')    
+o6=$(cat '/tmp/tmp1')   
+o7=$(cat '/tmp/tmp2')   
+o8=$(cat '/tmp/tmp3')   
+z1=$(cat '/tmp/tmp4')		
+z2=$(cat '/tmp/tmp5')		
+z3=$(cat '/tmp/tmp6')		
+z4=$(cat '/tmp/tmp7')		
+z5=$(cat '/tmp/tmp8')		
+z6=$(cat '/tmp/tmp9')		
+z7=$(cat '/tmp/tmp10')		
+z8=$(cat '/tmp/tmp11')		
+q1=$(cat '/tmp/tmp12')	
+
+
+o5="$o5$ex"
+o6="$o6$ex"
+o7="$o7$ex"
+o8="$o8$ex"
+z1="$z1$ex"
+z2="$z2$ex"
+z3="$z3$ex"
+z4="$z4$ex"
+z5="$z5$ex"
+z6="$z6$ex"
+z7="$z7$ex"
+z8="$z8$ex"
+q1="$q1$ex"
+
+rm /tmp/tmp  	
+rm /tmp/tmp1		
+rm /tmp/tmp2		
+rm /tmp/tmp3		
+rm /tmp/tmp4		
+rm /tmp/tmp5
+rm /tmp/tmp6
+rm /tmp/tmp7
+rm /tmp/tmp8
+rm /tmp/tmp9
+rm /tmp/tmp10
+rm /tmp/tmp11	
+rm /tmp/tmp12			
+
+		
+		
+#using this as tim stamp then you know it is doing something when it is checking th the hosts
+		
+			ELAPSED_TIME=$(($SECONDS - $START_TIME))
+			
+			echo -e "50%:  $ELAPSED_TIME Seconds"
+
+
+number=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$na26$p11
+number1=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$na27$p11
+number2=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$na28$p11
+number3=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$na29$p11
+number4=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$na30$p11
+number5=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$na31$p11
+number6=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$na32$p11
+number7=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$na33$p11
+number8=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$na34$p11
+number9=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$na35$p11
+number10=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$na36$p11
+number11=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$na37$p11
+number12=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$na38$p11
+
+eval $number$p12 > /tmp/tmp &
+eval $number1$p12 > /tmp/tmp1 &
+eval $number2$p12 > /tmp/tmp2 &
+eval $number3$p12 > /tmp/tmp3 &
+eval $number4$p12 > /tmp/tmp4 &
+eval $number5$p12 > /tmp/tmp5 &
+eval $number6$p12 > /tmp/tmp6 &
+eval $number7$p12 > /tmp/tmp7 &
+eval $number8$p12 > /tmp/tmp8 &
+eval $number9$p12 > /tmp/tmp9 &
+eval $number10$p12 > /tmp/tmp10 &
+eval $number11$p12 > /tmp/tmp11 &
+eval $number12$p12 > /tmp/tmp12 &
+sleep 2
+q2=$(cat '/tmp/tmp') 
+q3=$(cat '/tmp/tmp1') 
+q4=$(cat '/tmp/tmp2') 
+q5=$(cat '/tmp/tmp3') 
+q6=$(cat '/tmp/tmp4') 
+q7=$(cat '/tmp/tmp5') 
+q8=$(cat '/tmp/tmp6') 
+r1=$(cat '/tmp/tmp7') 
+r2=$(cat '/tmp/tmp8') 
+r3=$(cat '/tmp/tmp9') 
+r4=$(cat '/tmp/tmp10') 
+r5=$(cat '/tmp/tmp11') 
+r6=$(cat '/tmp/tmp12') 
+
+q2="$q2$ex"
+q3="$q3$ex"
+q4="$q4$ex"
+q5="$q5$ex"
+q6="$q6$ex"
+q7="$q7$ex"
+q8="$q8$ex"
+r1="$r1$ex"
+r2="$r2$ex"
+r3="$r3$ex"
+r4="$r4$ex"
+r5="$r5$ex"
+r6="$r6$ex"
+rm /tmp/tmp  	
+rm /tmp/tmp1		
+rm /tmp/tmp2		
+rm /tmp/tmp3		
+rm /tmp/tmp4		
+rm /tmp/tmp5
+rm /tmp/tmp6
+rm /tmp/tmp7
+rm /tmp/tmp8
+rm /tmp/tmp9
+rm /tmp/tmp10
+rm /tmp/tmp11	
+rm /tmp/tmp12
+
+
+
+
+
+		
+#using this as tim stamp then you know it is doing something when it is checking th the hosts
+			ELAPSED_TIME=$(($SECONDS - $START_TIME))
+			
+			echo -e "75%:  $ELAPSED_TIME Seconds"
+
+number=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$na39$p11
+number1=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$na40$p11
+number2=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$na41$p11
+number3=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$na42$p11
+number4=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$na43$p11
+number5=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$na44$p11
+number6=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$na45$p11
+number7=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$na46$p11
+number8=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$na47$p11
+number9=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$na48$p11
+
+eval $number$p12  > /tmp/tmp &
+eval $number1$p12 > /tmp/tmp1 &
+eval $number2$p12 > /tmp/tmp2 &
+eval $number3$p12 > /tmp/tmp3 &
+eval $number4$p12 > /tmp/tmp4 &
+eval $number5$p12 > /tmp/tmp5 &
+eval $number6$p12 > /tmp/tmp6 &
+eval $number7$p12 > /tmp/tmp7 &
+eval $number8$p12 > /tmp/tmp8 &
+eval $number9$p12 > /tmp/tmp9 &
+sleep 2
+r7=$(cat '/tmp/tmp') 
+r8=$(cat '/tmp/tmp1') 
+s1=$(cat '/tmp/tmp2') 
+s2=$(cat '/tmp/tmp3') 
+s3=$(cat '/tmp/tmp4') 
+s4=$(cat '/tmp/tmp5') 
+s5=$(cat '/tmp/tmp6') 
+s6=$(cat '/tmp/tmp7') 
+s7=$(cat '/tmp/tmp8') 
+s8=$(cat '/tmp/tmp9') 
+
+r7="$r7$ex"
+r8="$r8$ex"
+s1="$s1$ex"
+s2="$s2$ex"
+s3="$s3$ex"
+s4="$s4$ex"
+s5="$s5$ex"
+s6="$s6$ex"
+s7="$s7$ex"
+s8="$s8$ex"
+
+
+rm /tmp/tmp  	
+rm /tmp/tmp1		
+rm /tmp/tmp2		
+rm /tmp/tmp3		
+rm /tmp/tmp4		
+rm /tmp/tmp5
+rm /tmp/tmp6
+rm /tmp/tmp7
+rm /tmp/tmp8
+rm /tmp/tmp9
+
+
+
+
+		
+			echo ""
+			us="U| "
+			spa1=" "
+		
+#------------------------------------------------------------------------------------------------------------
+#this checks what the user as inputed and cause and can handle many different errors base on user
+	
+#=====================================ping the hosts==========================================================
+#this uses fping because it is faster and allows a easy to check if host is alive
+		dom=".cs.colostate.edu"
+		HOST="albany$dom"
+#fping i want the stuff to stay silent $HOST 1>/dev/null 2>/dev/null 
+		fping  $HOST 1>/dev/null 2>/dev/null   
+#check if this had a error if not make a g means good and b if it is bad
+		SUCCESS=$?
+			if [ $SUCCESS -eq 0 ]
+			then
+			  a="G|"
+			else
+			  a="B|"
+			fi
+		HOST="annapolis$dom"
+		fping  $HOST 1>/dev/null 2>/dev/null
+		SUCCESS=$?
+			if [ $SUCCESS -eq 0 ]
+			then
+			  a1="G|"
+			else
+			  a1="B|"
+			fi
+		HOST="atlanta$dom"
+		fping   $HOST 1>/dev/null 2>/dev/null
+		SUCCESS=$?
+			if [ $SUCCESS -eq 0 ]
+			then
+			  a2="G|"
+			else
+			  a2="B|"
+			fi
+		HOST="augusta$dom"
+		fping   $HOST 1>/dev/null 2>/dev/null
+		SUCCESS=$?
+			if [ $SUCCESS -eq 0 ]
+			then
+			  a3="G|"
+			else
+			  a3="B|"
+			fi
+#=============================Break points for testing==============================
+		HOST="austin$dom"
+		fping   $HOST 1>/dev/null 2>/dev/null
+		SUCCESS=$?
+			if [ $SUCCESS -eq 0 ]
+			then
+			  b="G|"
+			else
+			  b="B|"
+			fi
+		HOST=" baton-rouge$dom"
+		fping   $HOST 1>/dev/null 2>/dev/null
+		SUCCESS=$?
+			if [ $SUCCESS -eq 0 ]
+			then
+			  b1="G|"
+			else
+			  b1="B|"
+			fi
+		HOST="bismarck$dom"
+		fping  $HOST 1>/dev/null 2>/dev/null
+		SUCCESS=$?
+			if [ $SUCCESS -eq 0 ]
+			then
+			  b2="G|"
+			else
+			  b2="B|"
+			fi
+		HOST="boise$dom"
+		fping  $HOST 1>/dev/null 2>/dev/null
+		SUCCESS=$?
+			if [ $SUCCESS -eq 0 ]
+			then
+			  b3="G|"
+			else
+			  b3="B|"
+			fi
+#=============================Break points for testing==============================
+		HOST="boston$dom"
+		fping  $HOST 1>/dev/null 2>/dev/null
+		SUCCESS=$?
+			if [ $SUCCESS -eq 0 ]
+			then
+			  c="G|"
+			else
+			  c="B|"
+			fi
+		HOST="carson-city$dom"
+		fping  $HOST 1>/dev/null 2>/dev/null
+		SUCCESS=$?
+			if [ $SUCCESS -eq 0 ]
+			then
+			  c1="G|"
+			else
+			  c1="B|"
+			fi
+		HOST="charleston$dom"
+		fping  $HOST 1>/dev/null 2>/dev/null
+		SUCCESS=$?
+			if [ $SUCCESS -eq 0 ]
+			then
+			  c2="G|"
+			else
+			  c2="B|"
+			fi
+		HOST="cheyenne$dom"
+		fping  $HOST 1>/dev/null 2>/dev/null
+		SUCCESS=$?
+			if [ $SUCCESS -eq 0 ]
+			then
+			  c3="G|"
+			else
+			  c3="B|"
+			fi
+#=============================Break points for testing==============================
+		HOST="columbia$dom"
+		fping  $HOST 1>/dev/null 2>/dev/null
+		SUCCESS=$?
+			if [ $SUCCESS -eq 0 ]
+			then
+			  d="G|"
+			else
+			  d="B|"
+			fi
+		HOST="columbus-oh$dom"
+		fping -c1 $HOST 1>/dev/null 2>/dev/null
+		SUCCESS=$?
+			if [ $SUCCESS -eq 0 ]
+			then
+			  d1="G|"
+			else
+			  d1="B|"
+			fi
+		HOST="concord$dom"
+		fping -c1 $HOST 1>/dev/null 2>/dev/null
+		SUCCESS=$?
+			if [ $SUCCESS -eq 0 ]
+			then
+			  d2="G|"
+			else
+			  d2="B|"
+			fi
+		HOST="denver$dom"
+		fping -c1 $HOST 1>/dev/null 2>/dev/null
+		SUCCESS=$?
+			if [ $SUCCESS -eq 0 ]
+			then
+			  d3="G|"
+			else
+			  d3="B|"
+			fi
+#=============================Break points for testing==============================
+		HOST="des-moines$dom"
+		fping -c1 $HOST 1>/dev/null 2>/dev/null
+		SUCCESS=$?
+			if [ $SUCCESS -eq 0 ]
+			then
+			  e="G|"
+			else
+			  e="B|"
+			fi
+		HOST="dover$dom"
+		fping -c1 $HOST 1>/dev/null 2>/dev/null
+		SUCCESS=$?
+			if [ $SUCCESS -eq 0 ]
+			then
+			  e1="G|"
+			else
+			  e1="B|"
+			fi
+		HOST="frankfort$dom"
+		fping -c1 $HOST 1>/dev/null 2>/dev/null
+		SUCCESS=$?
+			if [ $SUCCESS -eq 0 ]
+			then
+			  e2="G|"
+			else
+			  e2="B|"
+			fi
+		HOST="harrisburg$dom"
+		fping -c1 $HOST 1>/dev/null 2>/dev/null
+		SUCCESS=$?
+			if [ $SUCCESS -eq 0 ]
+			then
+			  e3="G|"
+			else
+			  e3="B|"
+			fi
+#=============================Break points for testing==============================
+		HOST="hartford$dom"
+		fping -c1 $HOST 1>/dev/null 2>/dev/null
+		SUCCESS=$?
+			if [ $SUCCESS -eq 0 ]
+			then
+			  f="G|"
+			else
+			  f="B|"
+			fi
+		HOST="helena$dom"
+		fping -c1 $HOST 1>/dev/null 2>/dev/null
+		SUCCESS=$?
+			if [ $SUCCESS -eq 0 ]
+			then
+			  f1="G|"
+			else
+			  f1="B|"
+			fi
+		HOST="honolulu$dom"
+		fping -c1 $HOST 1>/dev/null 2>/dev/null
+		SUCCESS=$?
+			if [ $SUCCESS -eq 0 ]
+			then
+			  f2="G|"
+		
+			else
+			  f2="B|"
+			fi
+		HOST="indianapolis$dom"
+		fping $HOST 1>/dev/null 2>/dev/null
+		SUCCESS=$?
+			if [ $SUCCESS -eq 0 ]
+			then
+			  f3="G|"
+			else
+			  f3="B|"
+			fi
+#=============================Break points for testing==============================
+		HOST="jackson$dom"
+		fping $HOST 1>/dev/null 2>/dev/null
+		SUCCESS=$?
+			if [ $SUCCESS -eq 0 ]
+			then
+			  g="G|"
+			else
+			  g="B|"
+			fi
+		HOST="jefferson-city$dom"
+		fping $HOST 1>/dev/null 2>/dev/null
+		SUCCESS=$?
+			if [ $SUCCESS -eq 0 ]
+			then
+			  g1="G|"
+			else
+			  g1="B|"
+			fi
+		HOST="juneau$dom"
+		fping $HOST 1>/dev/null 2>/dev/null
+		SUCCESS=$?
+			if [ $SUCCESS -eq 0 ]
+			then
+			  g2="G|"
+			else
+			  g2="B|"
+			fi
+		HOST="lansing$dom"
+		fping $HOST 1>/dev/null 2>/dev/null
+		SUCCESS=$?
+			if [ $SUCCESS -eq 0 ]
+			then
+			  g3="G|"
+			else
+			  g3="B|"
+			fi
+#=============================Break points for testing==============================
+		HOST="lincoln$dom"
+		fping $HOST 1>/dev/null 2>/dev/null
+		SUCCESS=$?
+			if [ $SUCCESS -eq 0 ]
+			then
+			  h="G|"
+			else
+			  h="B|"
+			fi
+		HOST="little-rock$dom"
+		fping $HOST 1>/dev/null 2>/dev/null
+		SUCCESS=$?
+			if [ $SUCCESS -eq 0 ]
+			then
+			  h1="G|"
+			else
+			  h1="B|"
+			fi
+		HOST="madison$dom"
+		fping $HOST 1>/dev/null 2>/dev/null
+		SUCCESS=$?
+			if [ $SUCCESS -eq 0 ]
+			then
+			  h2="G|"
+			else
+			  h2="B|"
+			fi
+		HOST="montgomery$dom"
+		fping $HOST 1>/dev/null 2>/dev/null
+		SUCCESS=$?
+			if [ $SUCCESS -eq 0 ]
+			then
+			  h3="G|"
+			else
+			  h3="B|"
+			fi
+#=============================Break points for testing==============================
+		HOST="montpelier$dom"
+		fping $HOST 1>/dev/null 2>/dev/null
+		SUCCESS=$?
+			if [ $SUCCESS -eq 0 ]
+			then
+			  i="G|"
+			else
+			  i="B|"
+			fi
+		HOST="nashville$dom"
+		fping $HOST 1>/dev/null 2>/dev/null
+		SUCCESS=$?
+			if [ $SUCCESS -eq 0 ]
+			then
+			  i1="G|"
+			else
+			  i1="B|"
+			fi
+		HOST="oklahoma-city$dom"
+		fping $HOST 1>/dev/null 2>/dev/null
+		SUCCESS=$?
+			if [ $SUCCESS -eq 0 ]
+			then
+			  i2="G|"
+			else
+			  i2="B|"
+			fi
+		HOST="olympia$dom"
+		fping $HOST 1>/dev/null 2>/dev/null
+		SUCCESS=$?
+			if [ $SUCCESS -eq 0 ]
+			then
+			  i3="G|"
+			else
+			  i3="B|"
+			fi
+		
+#=============================Break points for testing==============================
+		HOST="phoenix$dom"
+		fping $HOST 1>/dev/null 2>/dev/null
+		SUCCESS=$?
+			if [ $SUCCESS -eq 0 ]
+			then
+			  j="G|"
+			else
+			  j="B|"
+			fi
+		HOST="pierre$dom"
+		fping $HOST 1>/dev/null 2>/dev/null
+		SUCCESS=$?
+			if [ $SUCCESS -eq 0 ]
+			then
+			  j1="G|"
+			else
+			  j1="B|"
+			fi
+		HOST="providence$dom"
+		fping $HOST 1>/dev/null 2>/dev/null
+		SUCCESS=$?
+			if [ $SUCCESS -eq 0 ]
+			then
+			  j2="G|"
+			else
+			  j2="B|"
+			fi
+		HOST="raleigh$dom"
+		fping $HOST 1>/dev/null 2>/dev/null
+		SUCCESS=$?
+			if [ $SUCCESS -eq 0 ]
+			then
+			  j3="G|"
+			else
+			  j3="B|"
+			fi
+#=============================Break points for testing==============================
+		HOST="richmond$dom"
+		fping $HOST 1>/dev/null 2>/dev/null
+		SUCCESS=$?
+			if [ $SUCCESS -eq 0 ]
+			then
+			  k="G|"
+			else
+			  k="B|"
+			fi
+		HOST="sacramento$dom"
+		fping $HOST 1>/dev/null 2>/dev/null
+		SUCCESS=$?
+			if [ $SUCCESS -eq 0 ]
+			then
+			  k1="G|"
+			else
+			  k1="B|"
+			fi
+		HOST="saint-paul$dom"
+		fping $HOST 1>/dev/null 2>/dev/null
+		SUCCESS=$?
+			if [ $SUCCESS -eq 0 ]
+			then
+			  k2="G|"
+			else
+			  k2="B|"
+			fi
+		HOST="salem$dom"
+		fping $HOST 1>/dev/null 2>/dev/null
+		SUCCESS=$?
+			if [ $SUCCESS -eq 0 ]
+			then
+			  k3="G|"
+			else
+			  k3="B|"
+			fi
+#=============================Break points for testing===============================
+		HOST="salt-lake-city$dom"
+		fping1 $HOST 1>/dev/null 2>/dev/null
+		SUCCESS=$?
+			if [ $SUCCESS -eq 0 ]
+			then
+			  l="G|"
+			else
+			  l="B|"
+			fi
+		HOST="santa-fe$dom"
+		fping $HOST 1>/dev/null 2>/dev/null
+		SUCCESS=$?
+			if [ $SUCCESS -eq 0 ]
+			then
+			  l1="G|"
+			else
+			  l1="B|"
+			fi
+		HOST="springfield$dom"
+		fping $HOST 1>/dev/null 2>/dev/null
+		SUCCESS=$?
+			if [ $SUCCESS -eq 0 ]
+			then
+			  l2="G|"
+			else
+			  l2="B|"
+			fi
+		HOST="tallahassee$dom"
+		fping $HOST 1>/dev/null 2>/dev/null
+		SUCCESS=$?
+			if [ $SUCCESS -eq 0 ]
+			then
+			  l3="G|"
+			else
+			  l3="B|"
+			fi
+		cn="C|"
+		
+# get final time to do all the commands and this get put in the the table
+	ELAPSED_TIME=$(($SECONDS - $START_TIME))
+
+flag="false"
+
+while [ "$flag" = "false" ]
+do
+
+echo "
+=Lab 120=============================Choose City=================================
+Number Users = U  Number to select = N   C = Connections status G=Good or B=Bad
+==================================================================================
+|N |$cn$us  City              City            $spa1 City                 City
+----------------------------------------------------------------------------------   
+| 1|$a$m1 albany    | 2|$a1$m2 annapolis  | 3|$a2$m3 atlanta    | 4|$a3$m4 augusta    
+| 5|$b$m5 austin    | 6|$b1$m6 baton-rouge| 7|$b2$m7 bismarck   | 8|$b3$m8 boise     
+| 9|$c$o1 boston    |10|$c1$o2 carson-city|11|$c2$o3 charleston |12|$c3$o4 cheyenne   
+|13|$d$o5 columbia  |14|$d1$o6 columbus-oh|15|$d2$o7 concord    |16|$d3$o8 denver     
+|17|$e$z1 des-moines|18|$e1$z2 dover      |19|$e2$z3 frankfort  |20|$e3$z4 harrisburg
+|21|$f$z5 hartford  |22|$f1$z6 helena     |23|$f2$z7 honolulu   |24|$f3$z8 indianapolis
+|25|$g$q1 jackson   |26|$g1$q2 jefferson  |27|$g2$q3 juneau     |28|$g3$q4 lansing   
+|29|$h$q5 lincoln   |30|$h1$q6 little-rock|31|$h2$q7 madison    |32|$h3$q8 montgomery 
+|33|$i$r1 montpelier|34|$i1$r2 nashville  |35|$i2$r3 oklahoma   |36|$i3$r4 olympia       
+|37|$j$r5 phoenix   |38|$j1$r6 pierre     |39|$j2$r7 providence |40|$j3$r8 raleigh
+|41|$k$s1 richmond  |42|$k1$s2 sacramento |43|$k2$s3 saint-paul |44|$k3$s4 salem  
+|45|$l$s5 salt-lake |46|$l1$s6 santa-fe   |47|$l2$s7 springfield|48|$l3$s8 tallahassee
+----------------------------------------------------------------------------------
+Total Time Taken: $ELAPSED_TIME Seconds
+==================================================================================="
+
+read -p "Enter the NUMBER of City you want to use: " input1
+
+
+if [ "$input1" = "exit" ] || [ "$input1" = "exit()" ] || [ "$input1" = "exit(1)" ] || [ "$input1" = "q" ] || [ "$input1" = "quit" ] || [ "$input1" = "quit()" ] || [ "$input1" = "quit(1)" ] || [ "$input1" = "stop" ];
+	then
+	exit 1 
+	fi
+
+
+
+if [[ "$input1" -ge 1  && "$input1" -le 49 ]] ;
+then
+flag="true"
+else
+flag="false"
+echo "************************************************"
+echo "Your input of $input1 is not right"
+echo "Please put number in that you see  in range 1-48"
+echo "You need to put in something like 1 or 19 or 48"
+echo "Try Again"
+echo "************************************************"
+fi
+done
+
+
+
+
+
+
+
+
+
+#===============================All ifs===========================================
+	if [ "$input1" = "1" ];
+	then
+		c0="albany"
+		eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$c0$p11
+	fi
+	if [ "$input1" = "2" ];
+	then
+		c1="annapolis"
+		eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$c1$p11
+	fi
+
+	if [ "$input1" = "3" ];
+	then
+		c2="atlanta"
+		eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$c2$p11
+	fi
+
+	if [ "$input1" = "4" ];
+	then
+		c3="augusta"
+		eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$c3$p11
+	fi
+	if [ "$input1" = "5" ];
+	then
+		c4="austin"
+		eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$c4$p11
+	fi
+	if [ "$input1" = "6" ];
+	then
+		c5="baton-rouge"
+		eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$c5$p11
+	fi
+	if [ "$input1" = "7" ];
+	then
+		c6="bismarck"
+		eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$c6$p11
+	fi
+	if [ "$input1" = "8" ];
+	then
+		c7="boise"
+		eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$c7$p11
+	fi
+	if [ "$input1" = "9" ];
+	then
+		c8="boston"
+		eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$c8$p11
+	fi
+	if [ "$input1" = "10" ];
+	then
+		c9="carson-city"
+		eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$c9$p11
+	fi
+	if [ "$input1" = "11" ];
+	then
+		c10="charleston"
+		eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$c10$p11
+	fi
+	if [ "$input1" = "12" ];
+	then
+		c11="cheyenne"
+		eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$c11$p11
+	fi
+	if [ "$input1" = "13" ];
+	then
+		c12="columbia"
+		eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$c12$p11
+	fi
+	if [ "$input1" = "14" ];
+	then
+		c13="columbus-oh"
+		eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$c13$p11
+	fi
+	if [ "$input1" = "15" ];
+	then
+		c14="concord"
+		eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$c14$p11
+	fi
+	if [ "$input1" = "16" ];
+	then
+		c15="denver"
+		eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$c15$p11
+	fi
+	if [ "$input1" = "17" ];
+	then
+		c16="des-moines"
+		eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$c16$p11
+	fi
+	if [ "$input1" = "18" ];
+	then
+		c17="dover"
+		eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$c17$p11
+	fi
+	if [ "$input1" = "19" ];
+	then
+		c18="frankfort"
+		eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$c18$p11
+	fi
+	if [ "$input1" = "20" ];
+	then
+		c19="harrisburg"
+		eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$c19$p11
+	fi
+	if [ "$input1" = "21" ];
+	then
+		c20="hartford"
+		eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$c20$p11
+	fi
+	if [ "$input1" = "22" ];
+	then
+		c21="helena"
+		eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$c21$p11
+	fi
+	if [ "$input1" = "23" ];
+	then
+		c22="honolulu"
+		eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$c22$p11
+	fi
+	if [ "$input1" = "24" ];
+	then
+		c23="indianapolis"
+		eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$c23$p11
+	fi
+	if [ "$input1" = "25" ];
+	then
+		c24="jackson"
+		eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$c24$p11
+	fi
+	if [ "$input1" = "26" ];
+	then
+		c25="jefferson-city"
+		eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$c25$p11
+	fi
+	if [ "$input1" = "27" ];
+	then
+		c26="juneau"
+		eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$c26$p11
+	fi
+	if [ "$input1" = "28" ];
+	then
+
+		c27="lansing"
+		eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$c27$p11
+	fi
+	if [ "$input1" = "29" ];
+	then
+		c28="lincoln"
+		eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$c28$p11
+	fi
+	if [ "$input1" = "30" ];
+	then
+		c29="little-rock"
+		eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$29$p11
+	fi
+	if [ "$input1" = "31" ];
+	then
+		c30="madison"
+		eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$c30$p11
+	fi
+	if [ "$input1" = "32" ];
+	then
+		c31="montgomery"
+		eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$c31$p11
+	fi
+	if [ "$input1" = "33" ];
+	then
+		c32="montpelier"
+		eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$c32$p11
+	fi
+	if [ "$input1" = "34" ];
+	then
+		c33="nashville"
+		eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$c33$p11
+	fi
+	if [ "$input1" = "35" ];
+	then
+		c34="oklahoma-city"
+		eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$c34$p11
+	fi
+	if [ "$input1" = "36" ];
+	then
+		c35="olympia"
+		eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$c35$p11
+	fi
+	if [ "$input1" = "37" ];
+	then
+		c36="phoenix"
+		eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$c36$p11
+	fi
+	if [ "$input1" = "38" ];
+	then
+		c37="pierre"
+		eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$c37$p11
+	fi
+	if [ "$input1" = "39" ];
+	then
+		c38="providence"
+		eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$c38$p11
+	fi
+	if [ "$input1" = "40" ];
+	then
+		c39="raleigh"
+		eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$c39$p11
+	fi
+	if [ "$input1" = "41" ];
+	then
+		c40="richmond"
+		eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$c40$p11
+	fi
+	if [ "$input1" = "42" ];
+	then
+		c41="sacramento"
+		eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$c41$p11
+	fi
+	if [ "$input1" = "43" ];
+	then
+		c42="saint-paul"
+		eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$c42$p11
+	fi
+	if [ "$input1" = "44" ];
+	then
+		c43="salem"
+		eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$c43$p11
+	fi
+	if [ "$input1" = "45" ];
+	then
+		c44="salt-lake-city"
+		eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$c44$p11
+	fi
+	if [ "$input1" = "46" ];
+	then
+		c45="santa-fe"
+		eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$c45$p11
+	fi
+	if [ "$input1" = "47" ];
+	then
+		c46="springfield"
+		eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$c46$p11
+	fi
+	if [ "$input1" = "48" ];
+	then
+		c47="tallahassee"
+		eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$c47$p11
+	fi
+	fi
+
+#==================================Repeat steps for next lab==========================================
+if [ "$input" = "120a" ];
+then
+rand=$[ $RANDOM % 30 ]
+echo ${fact[$rand]} 
+START_TIME=$SECONDS
+
+
+	
+#===================================
+	dom=".cs.colostate.edu"
+	HOST="topeka$dom"
+	fping  $HOST 1>/dev/null 2>/dev/null
+	SUCCESS=$?
+		if [ $SUCCESS -eq 0 ]
+		then
+		  alp="G|"
+		else
+		  alp="B|"
+		fi
+	dom=".cs.colostate.edu"
+	HOST="trenton$dom"
+	fping  $HOST 1>/dev/null 2>/dev/null
+	SUCCESS=$?
+		if [ $SUCCESS -eq 0 ]
+		then
+		  bet="G|"
+		else
+		  bet="B|"
+		fi
+	dom=".cs.colostate.edu"
+	HOST="washington-dc$dom"
+	fping  $HOST 1>/dev/null 2>/dev/null
+	SUCCESS=$?
+		if [ $SUCCESS -eq 0 ]
+		then
+		  del="G|"
+		else
+		  del="B|"
+		fi
+	cn="C|"
+
+
+	
+
+	na49="topeka"
+	na50="trenton"
+	na51="washington-dc"
+
+	ex="|"
+	p1="sshpass -p "
+	p2="'"
+	p3="'"
+	p4=" ssh -q -o "
+	p5="'"
+	p6="StrictHostKeyChecking"
+	p7=" no"
+	p8="'"
+	p9=" -X "
+	p10="@"
+	p11=".cs.colostate.edu"
+	p12=" 'who | wc -l' "
+	sp=" "
+
+	number=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$na49$p11
+	number1=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$na50$p11
+	number2=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$na51$p11
+
+eval $number$p12 > /tmp/tmp   &
+eval $number$p12 > /tmp/tmp1   &	
+eval $number$p12 > /tmp/tmp2   &
+
+sleep 4
+z1=$(cat '/tmp/tmp')
+z2=$(cat '/tmp/tmp1')
+z3=$(cat '/tmp/tmp2')
+
+
+z1="$z1$ex"
+z2="$z2$ex"
+z3="$z3$ex"
+rm /tmp/tmp  	
+rm /tmp/tmp1		
+rm /tmp/tmp2	
+
+us="U| "
+
+
+
+
+
+ELAPSED_TIME=$(($SECONDS - $START_TIME))
+
+
+flag="false"
+
+while [ "$flag" = "false" ]
+do
+
+echo "
+===========Choose City====================
+Number Users = U  Number to select = N   
+C = Connections status G=Good or B=Bad
+==========================================
+|N |$cn$us  City            
+------------------------------------------
+| 1|$alp$z1 topeka  
+| 2|$bet$z2 trenton 
+| 3|$del$z3 washington-dc       
+-----------------------------------------
+Total Time Taken: $ELAPSED_TIME Seconds
+========================================="
+read -p "Enter the NUMBER of City you want to use: " input1
+
+if [ "$input1" = "exit" ] || [ "$input1" = "exit()" ] || [ "$input1" = "exit(1)" ] || [ "$input1" = "q" ] || [ "$input1" = "quit" ] || [ "$input1" = "quit()" ] || [ "$input1" = "quit(1)" ] || [ "$input1" = "stop" ];
+	then
+	exit 1 
+	fi
+
+if [[ "$input1" -ge 1 && "$input1" -le 4 ]];
+then
+flag="true"
+else
+flag="false"
+echo "************************************************"
+echo "Your input of $input1 is not right"
+echo "You just have 3 chocies "
+echo "Please put number choice 1-3"
+echo "You need to put in something like 1 or 2 or 3"
+echo "Try Again"
+echo "************************************************"
+fi
+done
+
+
+
+
+
+
+
+	p1="sshpass -p "
+	p2="'"
+	p3="'"
+	p4=" ssh -q -o "
+	p5="'"
+	p6="StrictHostKeyChecking"
+	p7=" no"
+	p8="'"
+	p9=" -X "
+	p10="@"
+	p11=".cs.colostate.edu"
+
+	if [ "$input1" = "1" ];
+	then
+		d0="topeka"
+		eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$d0$p11
+	fi
+
+	if [ "$input1" = "2" ];
+	then
+		d1="trenton"
+		eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$d1$p11
+	fi
+
+	if [ "$input1" = "3" ];
+	then
+		d2="washington-dc"
+		eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$d2$p11
+	fi
+	fi
+
+	if [ "$input" = "120e" ];
+	then
+rand=$[ $RANDOM % 30 ]
+echo ${fact[$rand]} 
+	START_TIME=$SECONDS
+
+	
+#===================================
+	dom=".cs.colostate.edu"
+	HOST="earth$dom"
+	fping  $HOST 1>/dev/null 2>/dev/null
+	SUCCESS=$?
+		if [ $SUCCESS -eq 0 ]
+		then
+		  aaa="G|"
+		else
+		  aaa="B|"
+		fi
+	dom=".cs.colostate.edu"
+	HOST="jupiter$dom"
+	fping  $HOST 1>/dev/null 2>/dev/null
+	SUCCESS=$?
+		if [ $SUCCESS -eq 0 ]
+		then
+		  bbb="G|"
+		else
+		  bbb="B|"
+		fi
+	dom=".cs.colostate.edu"
+	HOST="mars$dom"
+	fping  $HOST 1>/dev/null 2>/dev/null
+	SUCCESS=$?
+		if [ $SUCCESS -eq 0 ]
+		then
+		  ccc="G|"
+		else
+		  ccc="B|"
+		fi
+	HOST="mercury$dom"
+	fping  $HOST 1>/dev/null 2>/dev/null
+	SUCCESS=$?
+		if [ $SUCCESS -eq 0 ]
+		then
+		  ddd="G|"
+		else
+		  ddd="B|"
+		fi
+	dom=".cs.colostate.edu"
+	HOST="neptune$dom"
+	fping  $HOST 1>/dev/null 2>/dev/null
+	SUCCESS=$?
+		if [ $SUCCESS -eq 0 ]
+		then
+		  eee="G|"
+		else
+		  eee="B|"
+		fi
+	dom=".cs.colostate.edu"
+	HOST="saturn$dom"
+	fping  $HOST 1>/dev/null 2>/dev/null
+	SUCCESS=$?
+		if [ $SUCCESS -eq 0 ]
+		then
+		  fff="G|"
+		else
+		  fff="B|"
+		fi
+	dom=".cs.colostate.edu"
+	HOST="uranus$dom"
+	fping  $HOST 1>/dev/null 2>/dev/null
+	SUCCESS=$?
+		if [ $SUCCESS -eq 0 ]
+		then
+		  ggg="G|"
+		else
+		  ggg="B|"
+		fi
+	dom=".cs.colostate.edu"
+	HOST="venus$dom"
+	fping  $HOST 1>/dev/null 2>/dev/null
+	SUCCESS=$?
+		if [ $SUCCESS -eq 0 ]
+		then
+		  hhh="G|"
+		else
+		  hhh="B|"
+		fi
+
+	cn="C|"
+	
+
+
+
+	na52="earth"
+	na53="jupiter"
+	na54="mars"
+	na55="mercury"
+	na56="neptune"
+	na57="saturn"
+	na58="uranus"
+	na59="venus"
+
+
+
+	ex="|"
+	p1="sshpass -p "
+	p2="'"
+	p3="'"
+	p4=" ssh -q -o "
+	p5="'"
+	p6="StrictHostKeyChecking"
+	p7=" no"
+	p8="'"
+	p9=" -X "
+	p10="@"
+	p11=".cs.colostate.edu"
+	p12=" 'who | wc -l' "
+	sp=" "
+
+	number=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$na52$p11
+	number1=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$na53$p11
+	number2=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$na54$p11
+	number3=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$na55$p11
+	number4=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$na56$p11
+	number5=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$na57$p11
+	number6=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$na58$p11
+	number7=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$na59$p11
+
+eval $number$p12 > /tmp/tmp     &
+eval $number1$p12 > /tmp/tmp1   &
+eval $number2$p12 > /tmp/tmp2   &
+eval $number3$p12 > /tmp/tmp3   &
+eval $number4$p12 > /tmp/tmp4   &
+eval $number5$p12 > /tmp/tmp5   &
+eval $number6$p12 > /tmp/tmp6   &
+eval $number7$p12 > /tmp/tmp7   &
+
+sleep 4
+zz1=$(cat '/tmp/tmp') 
+zz2=$(cat '/tmp/tmp1') 
+zz3=$(cat '/tmp/tmp2') 
+zz4=$(cat '/tmp/tmp3') 
+zz5=$(cat '/tmp/tmp4') 
+zz6=$(cat '/tmp/tmp5') 
+zz7=$(cat '/tmp/tmp6') 
+zz8=$(cat '/tmp/tmp7') 
+
+zz1="$zz1$ex"
+zz2="$zz2$ex" 
+zz3="$zz3$ex" 
+zz4="$zz4$ex" 
+zz5="$zz5$ex"
+zz6="$zz6$ex"
+zz7="$zz7$ex"
+zz8="$zz8$ex"
+
+
+
+rm /tmp/tmp  	
+rm /tmp/tmp1		
+rm /tmp/tmp2		
+rm /tmp/tmp3		
+rm /tmp/tmp4		
+rm /tmp/tmp5
+rm /tmp/tmp6
+rm /tmp/tmp7
+	us="U|  "
+	
+
+	ELAPSED_TIME=$(($SECONDS - $START_TIME))
+
+flag="false"
+
+while [ "$flag" = "false" ]
+do
+
+echo "
+=Lab 120e==========Choose Planet============
+Number Users = U  Number to select = N   
+C = Connections status G=Good or B=Bad
+==============================================
+|N|$cn$us Planet        Planet          Planet          
+------------------------------------------------
+|1|$aaa$zz1 earth   |2|$bbb$zz2 jupiter |3|$ccc$zz3 mars
+|4|$ddd$zz4 mercury |5|$eee$zz5 neptune |6|$fff$zz6 saturn  
+|7|$ggg$zz7 uranus  |8|$hhh$zz8 venus
+-----------------------------------------------
+Total Time Taken: $ELAPSED_TIME Seconds
+==============================================="
+read -p "Enter the NUMBER of Planet you want to use: " input1
+
+if [ "$input1" = "exit" ] || [ "$input1" = "exit()" ] || [ "$input1" = "exit(1)" ] || [ "$input1" = "q" ] || [ "$input1" = "quit" ] || [ "$input1" = "quit()" ] || [ "$input1" = "quit(1)" ] || [ "$input1" = "stop" ];
+	then
+	exit 1 
+	fi
+
+if [[ "$input1" -ge 1 && "$input1" -le 9 ]] ;
+then
+flag="true"
+else
+flag="false"
+echo "************************************************"
+echo "Your input of $input1 is not right"
+echo "You just have 8 choices"
+echo "Please put number from 1-8"
+echo "You need to put in something like 1 or 3 or 8"
+echo "Try Again"
+echo "************************************************"
+fi
+done
+
+
+
+
+
+
+
+	p1="sshpass -p "
+	p2="'"
+	p3="'"
+	p4=" ssh -q -o "
+	p5="'"
+	p6="StrictHostKeyChecking"
+	p7=" no"
+	p8="'"
+	p9=" -X "
+	p10="@"
+	p11=".cs.colostate.edu"
+
+
+	if [ "$input1" = "1" ];
+	then
+		d3="earth"
+		eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$d3$p11
+	fi
+
+	if [ "$input1" = "2" ];
+	then
+		d4="jupiter"
+		eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$d4$p11
+	fi
+
+	if [ "$input1" = "3" ];
+	then
+		d5="mars"
+		eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$d5$p11
+	fi
+
+	if [ "$input1" = "4" ];
+	then
+		d6="mercury"
+		eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$d6$p11
+	fi
+
+	if [ "$input1" = "5" ];
+	then
+		d7="neptune"
+		eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$d7$p11
+	fi
+
+	if [ "$input1" = "6" ];
+	then
+		d8="saturn"
+		eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$d8$p11
+	fi
+
+	if [ "$input1" = "7" ];
+	then
+		d9="uranus"
+		eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$d9$p11
+	fi
+
+	if [ "$input1" = "8" ];
+	then
+		d10="venus"
+		eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$d10$p11
+	fi
+	fi
+
+	if [ "$input" = "215" ];
+	then
+rand=$[ $RANDOM % 30 ]
+echo ${fact[$rand]} 
+	echo " "
+	START_TIME=$SECONDS
+
+
+#=========================================
+	
+#===================================
+	dom=".cs.colostate.edu"
+	HOST="ankara$dom"
+	fping  $HOST 1>/dev/null 2>/dev/null
+	SUCCESS=$?
+	if [ $SUCCESS -eq 0 ]
+	then
+	  vv01="G|"
+	else
+	  vv01="B|"
+	fi
+	HOST="baghdad$dom"
+	fping  $HOST 1>/dev/null 2>/dev/null
+	SUCCESS=$?
+	if [ $SUCCESS -eq 0 ]
+	then
+	  vv02="G|"
+	else
+	  vv02="B|"
+	fi
+	HOST="bangkok$dom"
+	fping  $HOST 1>/dev/null 2>/dev/null
+	SUCCESS=$?
+	if [ $SUCCESS -eq 0 ]
+	then
+	  vv03="G|"
+	else
+	  vv03="B|"
+	fi
+	HOST="beijing$dom"
+	fping  $HOST 1>/dev/null 2>/dev/null
+	SUCCESS=$?
+	if [ $SUCCESS -eq 0 ]
+	then
+	  vv04="G|"
+	else
+	  vv04="B|"
+	fi
+	HOST="berlin$dom"
+	fping  $HOST 1>/dev/null 2>/dev/null
+	SUCCESS=$?
+	if [ $SUCCESS -eq 0 ]
+	then
+	  vv05="G|"
+	else
+	  vv05="B|"
+	fi
+	HOST="bogota$dom"
+	fping  $HOST 1>/dev/null 2>/dev/null
+	SUCCESS=$?
+	if [ $SUCCESS -eq 0 ]
+	then
+	  vv06="G|"
+	else
+	  vv06="B|"
+	fi
+	HOST="cairo$dom"
+	fping  $HOST 1>/dev/null 2>/dev/null
+	SUCCESS=$?
+	if [ $SUCCESS -eq 0 ]
+	then
+	  vv07="G|"
+	else
+	  vv07="B|"
+	fi
+	HOST="damascus$dom"
+	fping  $HOST 1>/dev/null 2>/dev/null
+	SUCCESS=$?
+	if [ $SUCCESS -eq 0 ]
+	then
+	  vv08="G|"
+	else
+	  vv08="B|"
+	fi
+	HOST="dhaka$dom"
+	fping  $HOST 1>/dev/null 2>/dev/null
+	SUCCESS=$?
+	if [ $SUCCESS -eq 0 ]
+	then
+	  vv09="G|"
+	else
+	  vv09="B|"
+	fi
+	HOST="hanoi$dom"
+	fping  $HOST 1>/dev/null 2>/dev/null
+	SUCCESS=$?
+	if [ $SUCCESS -eq 0 ]
+	then
+	  vv10="G|"
+	else
+	  vv10="B|"
+	fi
+	HOST="hong-kong$dom"
+	fping  $HOST 1>/dev/null 2>/dev/null
+	SUCCESS=$?
+	if [ $SUCCESS -eq 0 ]
+	then
+	  vv11="G|"
+	else
+	  vv11="B|"
+	fi
+	HOST="jakarta$dom"
+	fping  $HOST 1>/dev/null 2>/dev/null
+	SUCCESS=$?
+	if [ $SUCCESS -eq 0 ]
+	then
+	  vv12="G|"
+	else
+	  vv12="B|"
+	fi
+	HOST="kabul$dom"
+	fping  $HOST 1>/dev/null 2>/dev/null
+	SUCCESS=$?
+	if [ $SUCCESS -eq 0 ]
+	then
+	  vv13="G|"
+	else
+	  vv13="B|"
+	fi
+	HOST="kinshasa$dom"
+	fping  $HOST 1>/dev/null 2>/dev/null
+	SUCCESS=$?
+	if [ $SUCCESS -eq 0 ]
+	then
+	  vv14="G|"
+	else
+	  vv14="B|"
+	fi
+	HOST="lima$dom"
+	fping  $HOST 1>/dev/null 2>/dev/null
+	SUCCESS=$?
+	if [ $SUCCESS -eq 0 ]
+	then
+	  vv15="G|"
+	else
+	  vv15="B|"
+	fi
+	HOST="london$dom"
+	fping  $HOST 1>/dev/null 2>/dev/null
+	SUCCESS=$?
+	if [ $SUCCESS -eq 0 ]
+	then
+	  vv16="G|"
+	else
+	  vv16="B|"
+	fi
+	HOST="madrid$dom"
+	fping  $HOST 1>/dev/null 2>/dev/null
+	SUCCESS=$?
+	if [ $SUCCESS -eq 0 ]
+	then
+	  vv17="G|"
+	else
+	  vv17="B|"
+	fi
+	HOST="mexico-city$dom"
+	fping  $HOST 1>/dev/null 2>/dev/null
+	SUCCESS=$?
+	if [ $SUCCESS -eq 0 ]
+	then
+	  vv18="G|"
+	else
+	  vv18="B|"
+	fi
+	HOST="moscow$dom"
+	fping  $HOST 1>/dev/null 2>/dev/null
+	SUCCESS=$?
+	if [ $SUCCESS -eq 0 ]
+	then
+	  vv19="G|"
+	else
+	  vv19="B|"
+	fi
+	HOST="pyongyang$dom"
+	fping  $HOST 1>/dev/null 2>/dev/null
+	SUCCESS=$?
+	if [ $SUCCESS -eq 0 ]
+	then
+	  vv20="G|"
+	else
+	  vv20="B|"
+	fi
+	HOST="riyadh$dom"
+	fping  $HOST 1>/dev/null 2>/dev/null
+	SUCCESS=$?
+	if [ $SUCCESS -eq 0 ]
+	then
+	  vv21="G|"
+	else
+	  vv21="B|"
+	fi
+	HOST="santiago$dom"
+	fping  $HOST 1>/dev/null 2>/dev/null
+	SUCCESS=$?
+	if [ $SUCCESS -eq 0 ]
+	then
+	  vv22="G|"
+	else
+	  vv22="B|"
+	fi
+	HOST="seoul$dom"
+	fping  $HOST 1>/dev/null 2>/dev/null
+	SUCCESS=$?
+	if [ $SUCCESS -eq 0 ]
+	then
+	  vv23="G|"
+	else
+	  vv23="B|"
+	fi
+	HOST="singapore$dom"
+	fping  $HOST 1>/dev/null 2>/dev/null
+	SUCCESS=$?
+	if [ $SUCCESS -eq 0 ]
+	then
+	  vv24="G|"
+	else
+	  vv24="B|"
+	fi
+	HOST="tehran$dom"
+	fping  $HOST 1>/dev/null 2>/dev/null
+	SUCCESS=$?
+	if [ $SUCCESS -eq 0 ]
+	then
+	  vv25="G|"
+	else
+	  vv25="B|"
+	fi
+	HOST="tokyo$dom"
+	fping  $HOST 1>/dev/null 2>/dev/null
+	SUCCESS=$?
+	if [ $SUCCESS -eq 0 ]
+	then
+	  vv26="G|"
+	else
+	  vv26="B|"
+	fi
+
+	cn="C|";
+	
+#========================================================================================================
+
+
+	na60="ankara"
+	na61="baghdad"
+	na62="bangkok"
+	na63="beijing"
+	na64="berlin"
+	na65="bogota"
+	na66="cairo"
+	na67="damascus"
+	na68="dhaka"
+	na69="hanoi"
+	na70="hong-kong"
+	na71="jakarta"
+	na72="kabul"
+	na73="kinshasa"
+	na74="lima"
+	na75="london"
+	na76="madrid"
+	na77="mexico-city"
+	na78="moscow"
+	na79="pyongyang"
+	na80="riyadh"
+	na81="santiago"
+	na82="seoul"
+	na83="singapore"
+	na84="tehran"
+	na85="tokyo"
+
+
+
+	ex="|"
+	p1="sshpass -p "
+	p2="'"
+	p3="'"
+	p4=" ssh -q -o "
+	p5="'"
+	p6="StrictHostKeyChecking"
+	p7=" no"
+	p8="'"
+	p9=" -X "
+	p10="@"
+	p11=".cs.colostate.edu"
+	p12=" 'who | wc -l' "
+	sp=" "
+
+number=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$na60$p11
+number1=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$na61$p11
+number2=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$na62$p11
+number3=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$na63$p11
+number4=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$na64$p11
+number5=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$na65$p11
+number6=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$na66$p11
+
+
+eval $number$p12 > /tmp/tmp &
+eval $number$p12 > /tmp/tmp1 &
+eval $number$p12 > /tmp/tmp2 &
+eval $number$p12 > /tmp/tmp3 &
+eval $number$p12 > /tmp/tmp4 &
+eval $number$p12 > /tmp/tmp5 &
+eval $number$p12 > /tmp/tmp6 &
+sleep 2
+xx01=$(cat '/tmp/tmp')
+xx02=$(cat '/tmp/tmp1')
+xx03=$(cat '/tmp/tmp2')
+xx04=$(cat '/tmp/tmp3')
+xx05=$(cat '/tmp/tmp4')
+xx06=$(cat '/tmp/tmp5')
+xx07=$(cat '/tmp/tmp6')
+
+xx01="$xx01$ex"
+xx02="$xx02$ex"
+xx03="$xx03$ex"
+xx04="$xx04$ex"
+xx05="$xx05$ex"
+xx06="$xx06$ex"
+xx07="$xx07$ex"
+
+
+
+
+rm /tmp/tmp  	
+rm /tmp/tmp1		
+rm /tmp/tmp2		
+rm /tmp/tmp3		
+rm /tmp/tmp4		
+rm /tmp/tmp5
+rm /tmp/tmp6
+
+
+
+		ELAPSED_TIME=$(($SECONDS - $START_TIME))
+		echo -e "25%:  $ELAPSED_TIME Seconds"
+
+
+
+number=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$na67$p11
+number1=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$na68$p11
+number2=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$na69$p11
+number3=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$na70$p11
+number4=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$na71$p11
+number5=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$na72$p11
+number6=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$na73$p11
+number7=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$na74$p11
+
+
+
+eval $number$p12 > /tmp/tmp &
+eval $number1$p12 > /tmp/tmp1 &
+eval $number2$p12 > /tmp/tmp2 &
+eval $number3$p12 > /tmp/tmp3 &
+eval $number4$p12 > /tmp/tmp4 &
+eval $number5$p12 > /tmp/tmp5 &
+eval $number6$p12 > /tmp/tmp6 &
+eval $number7$p12 > /tmp/tmp7 &
+
+sleep 2
+xx08=$(cat '/tmp/tmp')
+xx09=$(cat '/tmp/tmp1')
+xx10=$(cat '/tmp/tmp2')
+xx11=$(cat '/tmp/tmp3')
+xx12=$(cat '/tmp/tmp4')
+xx13=$(cat '/tmp/tmp5')
+xx14=$(cat '/tmp/tmp6')
+xx15=$(cat '/tmp/tmp7')
+
+xx08="$xx08$ex"
+xx09="$xx09$ex"
+xx10="$xx10$ex"
+xx11="$xx11$ex"
+xx12="$xx12$ex"
+xx13="$xx13$ex"
+xx14="$xx14$ex"
+xx15="$xx15$ex"
+
+
+
+rm /tmp/tmp  	
+rm /tmp/tmp1		
+rm /tmp/tmp2		
+rm /tmp/tmp3		
+rm /tmp/tmp4		
+rm /tmp/tmp5
+rm /tmp/tmp6
+rm /tmp/tmp7	
+		
+		ELAPSED_TIME=$(($SECONDS - $START_TIME))
+		echo -e "50%:  $ELAPSED_TIME Seconds"
+
+
+
+number=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$na75$p11
+number1=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$na76$p11
+number2=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$na77$p11
+number3=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$na78$p11
+number4=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$na79$p11
+number5=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$na80$p11
+number6=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$na81$p11
+
+
+
+eval $number$p12  > /tmp/tmp &
+eval $number1$p12  > /tmp/tmp1 &
+eval $number2$p12  > /tmp/tmp2 &
+eval $number3$p12  > /tmp/tmp3 &
+eval $number4$p12  > /tmp/tmp4 &
+eval $number5$p12  > /tmp/tmp5 &
+eval $number6$p12  > /tmp/tmp6 &
+sleep 2
+xx16=$(cat '/tmp/tmp')
+xx17=$(cat '/tmp/tmp1')
+xx18=$(cat '/tmp/tmp2')
+xx19=$(cat '/tmp/tmp3')
+xx20=$(cat '/tmp/tmp4')
+xx21=$(cat '/tmp/tmp5')
+xx22=$(cat '/tmp/tmp6')
+
+xx16="$xx16$ex"
+xx17="$xx17$ex"
+xx18="$xx18$ex"
+xx19="$xx19$ex"
+xx20="$xx20$ex"
+xx21="$xx21$ex"
+xx22="$xx22$ex"
+
+
+
+
+
+rm /tmp/tmp  	
+rm /tmp/tmp1		
+rm /tmp/tmp2		
+rm /tmp/tmp3		
+rm /tmp/tmp4		
+rm /tmp/tmp5
+rm /tmp/tmp6
+
+	
+	
+		ELAPSED_TIME=$(($SECONDS - $START_TIME))
+		echo -e "75%:  $ELAPSED_TIME Seconds"
+
+
+number=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$na82$p11
+number1=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$na83$p11
+number2=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$na84$p11
+number3=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$na85$p11
+number4=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$na86$p11
+
+
+eval $number$p12  > /tmp/tmp &
+eval $number1$p12 > /tmp/tmp1 &
+eval $number2$p12 > /tmp/tmp2 &
+eval $number3$p12 > /tmp/tmp3 &
+eval $number4$p12 > /tmp/tmp4 &
+
+sleep 2
+xx23=$(cat '/tmp/tmp')
+xx24=$(cat '/tmp/tmp1')
+xx25=$(cat '/tmp/tmp2')
+xx26=$(cat '/tmp/tmp3')
+xx27=$(cat '/tmp/tmp4')
+
+
+xx23="$xx23$ex"
+xx24="$xx24$ex"
+xx25="$xx25$ex"
+xx26="$xx26$ex"
+xx27="$xx27$ex"
+
+
+rm /tmp/tmp  	
+rm /tmp/tmp1		
+rm /tmp/tmp2		
+rm /tmp/tmp3		
+rm /tmp/tmp4	
+	echo ""
+	us="U|  "
+	
+
+	ELAPSED_TIME=$(($SECONDS - $START_TIME))
+flag="false"
+
+while [ "$flag" = "false" ]
+do
+echo "
+=Lab 215=============Choose City================================================
+Number Users = U  Number to select = N   C = Connections status G=Good or B=Bad
+================================================================================
+|N |$cn$us  City            City            City            City
+--------------------------------------------------------------------------------- 
+| 1|$vv01$xx01 ankara | 2|$vv02$xx02 baghdad   | 3|$vv03$xx03 bangkok | 4|$vv04$xx04 beijing   
+| 5|$vv05$xx05 berlin | 6|$vv06$xx06 bogota    | 7|$vv07$xx07 cairo   | 8|$vv08$xx05 damascus     
+| 9|$vv09$xx09 dhaka  |10|$vv10$xx10 hanoi     |11|$vv11$xx11 hongkong|12|$vv12$xx12 jakarta   
+|13|$vv13$xx13 kabul  |14|$vv14$xx14 kinshasa  |15|$vv15$xx15 lima    |16|$vv16$xx16 london    
+|17|$vv17$xx17 madrid |18|$vv18$xx18 mexicocity|19|$vv19$xx19 moscow  |20|$vv20$xx20 pyongyang
+|21|$vv21$xx21 riyadh |22|$vv22$xx22 santiago  |23|$vv23$xx23 seoul   |24|$vv24$xx24 singapore
+|25|$vv25$xx25 tehran |26|$vv26$xx26 tokyo 
+-------------------------------------------------------------------------------
+Total Time Taken: $ELAPSED_TIME Seconds
+================================================================================="
+
+read -p "Enter the NUMBER of City you want to use: " input1
+
+if [ "$input1" = "exit" ] || [ "$input1" = "exit()" ] || [ "$input1" = "exit(1)" ] || [ "$input1" = "q" ] || [ "$input1" = "quit" ] || [ "$input1" = "quit()" ] || [ "$input1" = "quit(1)" ] || [ "$input1" = "stop" ];
+	then
+	exit 1 
+	fi
+
+if [[ "$input1" -ge 1 && "$input1" -le 27 ]] ;
+then
+flag="true"
+else
+flag="false"
+echo "************************************************"
+echo "Your input of $input1 is not right"
+echo "Please put number from 1-26"
+echo "You need to put in something like 1 or 19 or 23"
+echo "Try Again"
+echo "************************************************"
+fi
+done
+
+
+
+
+
+	p1="sshpass -p "
+	p2="'"
+	p3="'"
+	p4=" ssh -q -o "
+	p5="'"
+	p6="StrictHostKeyChecking"
+	p7=" no"
+	p8="'"
+	p9=" -X "
+	p10="@"
+	p11=".cs.colostate.edu"
+
+
+
+
+	if [ "$input1" = "1" ];
+	then
+	h0="ankara"
+	eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$h0$p11
+	fi
+
+
+	if [ "$input1" = "2" ];
+	then
+	h1="baghdad"
+	eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$h1$p11
+	fi
+
+	if [ "$input1" = "3" ];
+	then
+	h2="bangkok"
+	eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$h2$p11
+	fi
+
+	if [ "$input1" = "4" ];
+	then
+	h3="beijing"
+	eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$h3$p11
+	fi
+
+	if [ "$input1" = "5" ];
+	then
+	h4="berlin"
+	eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$h4$p11
+	fi
+
+	if [ "$input1" = "6" ];
+	then
+	h5="bogota"
+	eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$h5$p11
+	fi
+
+	if [ "$input1" = "7" ];
+	then
+	h6="cairo"
+	eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$h6$p11
+	fi
+
+	if [ "$input1" = "8" ];
+	then
+	h7="damascus"
+	eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$h7$p11
+	fi
+
+
+	if [ "$input1" = "9" ];
+	then
+	h8="dhaka"
+	eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$h8$p11
+	fi
+
+	if [ "$input1" = "10" ];
+	then
+	h9="hanoi"
+	eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$h9$p11
+	fi
+
+	if [ "$input1" = "11" ];
+	then
+	h10="hong-kong"
+	eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$h10$p11
+	fi
+
+	if [ "$input1" = "12" ];
+	then
+	h11="jakarta"
+	eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$h11$p11
+	fi
+
+	if [ "$input1" = "13" ];
+	then
+	h12="kabul"
+	eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$h12$p11
+	fi
+
+	if [ "$input1" = "14" ];
+	then
+	h13="kinshasa"
+	eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$h13$p11
+	fi
+
+	if [ "$input1" = "15" ];
+	then
+	h14="lima"
+	eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$h14$p11
+	fi
+
+	if [ "$input1" = "16" ];
+	then
+	h15="london"
+	eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$h15$p11
+	fi
+
+	if [ "$input1" = "17" ];
+	then
+	h16="madrid"
+	eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$h16$p11
+	fi
+
+	if [ "$input1" = "18" ];
+	then
+	h17="mexico-city"
+	eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$h17$p11
+	fi
+
+	if [ "$input1" = "19" ];
+	then
+	h18="moscow"
+	eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$h18$p11
+	fi
+
+	if [ "$input1" = "20" ];
+	then
+	h19="pyongyang"
+	eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$h19$p11
+	fi
+
+	if [ "$input1" = "21" ];
+	then
+	h20="riyadh"
+	eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$h20$p11
+	fi
+
+	if [ "$input1" = "22" ];
+	then
+	h21="santiago"
+	eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$h21$p11
+	fi
+
+	if [ "$input1" = "23" ];
+	then
+	h22="seoul"
+	eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$h22$p11
+	fi
+
+	if [ "$input1" = "24" ];
+	then
+	h23="singapore"
+	eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$h23$p11
+	fi
+
+	if [ "$input1" = "25" ];
+	then
+	h24="tehran"
+	eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$h24$p11
+	fi
+
+	if [ "$input1" = "26" ];
+	then
+	h25="tokyo"
+	eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$h25$p11
+	fi
+	fi
+	if [ "$input" = "225" ];
+	then
+rand=$[ $RANDOM % 30 ]
+echo ${fact[$rand]} 
+	echo " "
+	START_TIME=$SECONDS
+#=====================================================
+
+#===================================
+	pa60="a-basin"
+	pa61="ajax"
+	pa62="beaver-creek"
+	pa63="breckenridge"
+	pa64="buttermilk"
+	pa65="cooper"
+	pa66="copper-mtn"
+	pa67="crested-butte"
+	pa68="eldora"
+	pa69="grandby-ranch"
+	pa70="aspen-highlands"
+	pa71="howelsen-hil"
+	pa72="keystone"
+	pa73="loveland"
+	pa74="mary-jane"
+	pa75="monarch"
+	pa76="powderhorn"
+	pa77="purgatory"
+	pa78="silverton"
+	pa79="snowmass"
+	pa80="steamboat"
+	pa81="sunlight"
+	pa82="telluride"
+	pa83="vail"
+	pa84="winter-park"
+	pa85="wolf-creek"
+#============================================================
+	dom=".cs.colostate.edu"
+	HOST="$pa60$dom"
+	fping  $HOST 1>/dev/null 2>/dev/null
+	SUCCESS=$?
+		if [ $SUCCESS -eq 0 ]
+		then
+		  jj01="G|"
+		else
+		  jj01="B|"
+		fi
+	HOST="$pa61$dom"
+	fping  $HOST 1>/dev/null 2>/dev/null
+	SUCCESS=$?
+		if [ $SUCCESS -eq 0 ]
+		then
+		  jj02="G|"
+		else
+		  jj02="B|"
+		fi
+	HOST="$pa62$dom"
+	fping  $HOST 1>/dev/null 2>/dev/null
+	SUCCESS=$?
+		if [ $SUCCESS -eq 0 ]
+		then
+		  jj03="G|"
+		else
+		  jj03="B|"
+		fi
+	HOST="$pa63$dom"
+	fping  $HOST 1>/dev/null 2>/dev/null
+	SUCCESS=$?
+		if [ $SUCCESS -eq 0 ]
+		then
+		  jj04="G|"
+		else
+		  jj04="B|"
+		fi
+	HOST="$pa64$dom"
+	fping  $HOST 1>/dev/null 2>/dev/null
+	SUCCESS=$?
+		if [ $SUCCESS -eq 0 ]
+		then
+		  jj05="G|"
+		else
+		  jj05="B|"
+		fi
+	HOST="$pa65$dom"
+	fping  $HOST 1>/dev/null 2>/dev/null
+	SUCCESS=$?
+		if [ $SUCCESS -eq 0 ]
+		then
+		  jj06="G|"
+		else
+		  jj06="B|"
+		fi
+	HOST="$pa66$dom"
+	fping  $HOST 1>/dev/null 2>/dev/null
+	SUCCESS=$?
+		if [ $SUCCESS -eq 0 ]
+		then
+		  jj07="G|"
+		else
+		  jj07="B|"
+		fi
+	HOST="$pa67$dom"
+	fping  $HOST 1>/dev/null 2>/dev/null
+	SUCCESS=$?
+		if [ $SUCCESS -eq 0 ]
+		then
+		  jj08="G|"
+		else
+		  jj08="B|"
+		fi
+	HOST="$pa68$dom"
+	fping  $HOST 1>/dev/null 2>/dev/null
+	SUCCESS=$?
+		if [ $SUCCESS -eq 0 ]
+		then
+		  jj09="G|"
+		else
+		  jj09="B|"
+		fi
+	HOST="$pa69$dom"
+	fping  $HOST 1>/dev/null 2>/dev/null
+	SUCCESS=$?
+		if [ $SUCCESS -eq 0 ]
+		then
+		  jj10="G|"
+		else
+		  jj10="B|"
+		fi
+	HOST="$pa70$dom"
+	fping  $HOST 1>/dev/null 2>/dev/null
+	SUCCESS=$?
+		if [ $SUCCESS -eq 0 ]
+		then
+		  jj11="G|"
+		else
+		  jj11="B|"
+		fi
+	HOST="$pa71$dom"
+	fping  $HOST 1>/dev/null 2>/dev/null
+	SUCCESS=$?
+		if [ $SUCCESS -eq 0 ]
+		then
+		  jj12="G|"
+		else
+		  jj12="B|"
+		fi
+	HOST="$pa72$dom"
+	fping  $HOST 1>/dev/null 2>/dev/null
+	SUCCESS=$?
+		if [ $SUCCESS -eq 0 ]
+		then
+		  jj13="G|"
+		else
+		  jj13="B|"
+		fi
+	HOST="$pa73$dom"
+	fping  $HOST 1>/dev/null 2>/dev/null
+	SUCCESS=$?
+		if [ $SUCCESS -eq 0 ]
+		then
+		  jj14="G|"
+		else
+		  jj14="B|"
+		fi
+	HOST="$pa74$dom"
+	fping  $HOST 1>/dev/null 2>/dev/null
+	SUCCESS=$?
+		if [ $SUCCESS -eq 0 ]
+		then
+		  jj15="G|"
+		else
+		  jj15="B|"
+		fi
+	HOST="$pa75$dom"
+	fping  $HOST 1>/dev/null 2>/dev/null
+	SUCCESS=$?
+		if [ $SUCCESS -eq 0 ]
+		then
+		  jj16="G|"
+		else
+		  jj16="B|"
+		fi
+	HOST="$pa76$dom"
+	fping  $HOST 1>/dev/null 2>/dev/null
+	SUCCESS=$?
+		if [ $SUCCESS -eq 0 ]
+		then
+		  jj17="G|"
+		else
+		  jj17="B|"
+		fi
+	HOST="$pa77$dom"
+	fping  $HOST 1>/dev/null 2>/dev/null
+	SUCCESS=$?
+		if [ $SUCCESS -eq 0 ]
+		then
+		  jj18="G|"
+		else
+		  jj18="B|"
+		fi
+	HOST="$pa78$dom"
+	fping  $HOST 1>/dev/null 2>/dev/null
+	SUCCESS=$?
+		if [ $SUCCESS -eq 0 ]
+		then
+		  jj19="G|"
+		else
+		  jj19="B|"
+		fi
+	HOST="$pa79$dom"
+	fping  $HOST 1>/dev/null 2>/dev/null
+	SUCCESS=$?
+		if [ $SUCCESS -eq 0 ]
+		then
+		  jj20="G|"
+		else
+		  jj20="B|"
+		fi
+	HOST="$pa80$dom"
+	fping  $HOST 1>/dev/null 2>/dev/null
+	SUCCESS=$?
+		if [ $SUCCESS -eq 0 ]
+		then
+		  jj21="G|"
+		else
+		  jj21="B|"
+		fi
+	HOST="$pa81$dom"
+	fping  $HOST 1>/dev/null 2>/dev/null
+	SUCCESS=$?
+		if [ $SUCCESS -eq 0 ]
+		then
+		  jj22="G|"
+		else
+		  jj22="B|"
+		fi
+	HOST="$pa82$dom"
+	fping  $HOST 1>/dev/null 2>/dev/null
+	SUCCESS=$?
+		if [ $SUCCESS -eq 0 ]
+		then
+		  jj23="G|"
+		else
+		  jj23="B|"
+		fi
+	HOST="$pa83$dom"
+	fping  $HOST 1>/dev/null 2>/dev/null
+	SUCCESS=$?
+		if [ $SUCCESS -eq 0 ]
+		then
+		  jj24="G|"
+		else
+		  jj24="B|"
+		fi
+	HOST="$pa84$dom"
+	fping  $HOST 1>/dev/null 2>/dev/null
+	SUCCESS=$?
+		if [ $SUCCESS -eq 0 ]
+		then
+		  jj25="G|"
+		else
+		  jj25="B|"
+		fi
+	HOST="$pa85$dom"
+	fping  $HOST 1>/dev/null 2>/dev/null
+	SUCCESS=$?
+		if [ $SUCCESS -eq 0 ]
+		then
+		  jj26="G|"
+		else
+		  jj26="B|"
+		fi
+	cn="C|";
+	
+
+#===============================================================================================
+
+
+#===================================================================================================
+	pa60="a-basin"
+	pa61="ajax"
+	pa62="beaver-creek"
+	pa63="breckenridge"
+	pa64="buttermilk"
+	pa65="cooper"
+	pa66="copper-mtn"
+	pa67="crested-butte"
+	pa68="eldora"
+	pa69="grandby-ranch"
+	pa70="aspen-highlands"
+	pa71="howelsen-hil"
+	pa72="keystone"
+	pa73="loveland"
+	pa74="mary-jane"
+	pa75="monarch"
+	pa76="powderhorn"
+	pa77="purgatory"
+	pa78="silverton"
+	pa79="snowmass"
+	pa80="steamboat"
+	pa81="sunlight"
+	pa82="telluride"
+	pa83="vail"
+	pa84="winter-park"
+	pa85="wolf-creek"
+
+
+
+
+	ex="|"
+	p1="sshpass -p "
+	p2="'"
+	p3="'"
+	p4=" ssh -q -o "
+	p5="'"
+	p6="StrictHostKeyChecking"
+	p7=" no"
+	p8="'"
+	p9=" -X "
+	p10="@"
+	p11=".cs.colostate.edu"
+	p12=" 'who | wc -l' "
+	sp=" "
+
+number=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$pa60$p11
+number1=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$pa61$p11
+number2=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$pa62$p11
+number3=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$pa63$p11
+number4=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$pa64$p11
+
+
+eval $number$p12> /tmp/tmp &
+eval $number1$p12> /tmp/tmp1 &
+eval $number2$p12> /tmp/tmp2 &
+eval $number3$p12> /tmp/tmp3 &
+eval $number4$p12> /tmp/tmp4 &
+sleep 2
+pp01=$(cat '/tmp/tmp')
+pp02=$(cat '/tmp/tmp1')
+pp03=$(cat '/tmp/tmp2')
+pp04=$(cat '/tmp/tmp3')
+pp05=$(cat '/tmp/tmp4')
+
+pp01="$pp01$ex"
+pp02="$pp02$ex"
+pp03="$pp03$ex"
+pp04="$pp04$ex"
+pp05="$pp05$ex"
+
+rm /tmp/tmp  	
+rm /tmp/tmp1		
+rm /tmp/tmp2		
+rm /tmp/tmp3		
+rm /tmp/tmp4
+
+
+		ELAPSED_TIME=$(($SECONDS - $START_TIME))
+		echo -e "25%:  $ELAPSED_TIME Seconds"
+
+
+number=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$pa65$p11
+number1=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$pa66$p11
+number2=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$pa67$p11
+number3=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$pa68$p11
+number4=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$pa69$p11
+number5=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$pa70$p11
+number6=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$pa71$p11
+
+eval $number$p12 > /tmp/tmp &
+eval $number1$p12 > /tmp/tmp1 &
+eval $number2$p12 > /tmp/tmp2 &
+eval $number3$p12 > /tmp/tmp3 &
+eval $number4$p12 > /tmp/tmp4 &
+eval $number5$p12 > /tmp/tmp5 &
+eval $number6$p12 > /tmp/tmp6 &
+
+sleep 2
+
+pp06=$(cat '/tmp/tmp')	
+pp07=$(cat '/tmp/tmp1')	
+pp08=$(cat '/tmp/tmp2')	
+pp09=$(cat '/tmp/tmp3')	
+pp10=$(cat '/tmp/tmp4')	
+pp11=$(cat '/tmp/tmp5')	
+pp12=$(cat '/tmp/tmp6')	
+
+
+pp06="$pp06$ex"
+pp07="$pp07$ex"	
+pp08="$pp08$ex"
+pp09="$pp09$ex"	
+pp10="$pp10$ex"	
+pp11="$pp11$ex"	
+pp12="$pp12$ex"
+
+
+rm /tmp/tmp  	
+rm /tmp/tmp1		
+rm /tmp/tmp2		
+rm /tmp/tmp3		
+rm /tmp/tmp4		
+rm /tmp/tmp5
+rm /tmp/tmp6
+	
+		
+		ELAPSED_TIME=$(($SECONDS - $START_TIME))
+		echo -e "50%:  $ELAPSED_TIME Seconds"
+
+
+number=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$pa72$p11
+number1=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$pa73$p11
+number2=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$pa74$p11
+number3=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$pa75$p11
+number4=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$pa76$p11
+number5=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$pa77$p11
+number6=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$pa78$p11
+
+
+eval $number$p12 > /tmp/tmp &
+eval $number1$p12 > /tmp/tmp1 &
+eval $number2$p12 > /tmp/tmp2 &
+eval $number3$p12 > /tmp/tmp3 &
+eval $number4$p12 > /tmp/tmp4 &
+eval $number5$p12 > /tmp/tmp5 &
+eval $number6$p12 > /tmp/tmp6 &
+
+
+sleep 2
+	
+pp13=$(cat '/tmp/tmp')
+pp14=$(cat '/tmp/tmp1')
+pp15=$(cat '/tmp/tmp2')
+pp16=$(cat '/tmp/tmp3')
+pp17=$(cat '/tmp/tmp4')
+pp18=$(cat '/tmp/tmp5')
+pp19=$(cat '/tmp/tmp6')
+
+rm /tmp/tmp  	
+rm /tmp/tmp1		
+rm /tmp/tmp2		
+rm /tmp/tmp3		
+rm /tmp/tmp4		
+rm /tmp/tmp5
+rm /tmp/tmp6
+
+pp13="$pp13$ex"
+pp14="$pp14$ex"
+pp15="$pp15$ex"
+pp16="$pp16$ex"
+pp17="$pp17$ex"
+pp18="$pp18$ex"
+pp19="$pp19$ex"
+
+
+
+
+
+
+		
+		ELAPSED_TIME=$(($SECONDS - $START_TIME))
+		echo -e "75%:  $ELAPSED_TIME Seconds"
+
+number=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$pa79$p11
+number1=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$pa80$p11
+number2=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$pa81$p11
+number3=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$pa82$p11
+number4=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$pa83$p11
+number5=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$pa84$p11
+number6=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$pa85$p11
+number7=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$pa86$p11
+
+
+
+eval $number$p12 > /tmp/tmp &
+eval $number1$p12 > /tmp/tmp1 &
+eval $number2$p12 > /tmp/tmp2 &
+eval $number3$p12 > /tmp/tmp3 &
+eval $number4$p12 > /tmp/tmp4 &
+eval $number5$p12 > /tmp/tmp5 &
+eval $number6$p12 > /tmp/tmp6 &
+eval $number7$p12 > /tmp/tmp7 &
+sleep 3
+	
+pp20=$(cat '/tmp/tmp')
+pp21=$(cat '/tmp/tmp1')
+pp22=$(cat '/tmp/tmp2')
+pp23=$(cat '/tmp/tmp3')
+pp24=$(cat '/tmp/tmp4')
+pp25=$(cat '/tmp/tmp5')
+pp26=$(cat '/tmp/tmp6')
+pp27=$(cat '/tmp/tmp7')
+
+pp20="$pp20$ex"
+pp21="$pp21$ex"
+pp22="$pp22$ex"
+pp23="$pp23$ex"
+pp24="$pp24$ex"
+pp25="$pp25$ex"
+pp26="$pp26$ex"
+pp27="$pp27$ex"
+
+
+
+
+
+
+rm /tmp/tmp  	
+rm /tmp/tmp1		
+rm /tmp/tmp2		
+rm /tmp/tmp3		
+rm /tmp/tmp4		
+rm /tmp/tmp5
+rm /tmp/tmp6
+rm /tmp/tmp7
+
+
+	echo ""
+	us="U|  "
+	space1="   "
+	space2="   "
+
+	
+
+
+
+ELAPSED_TIME=$(($SECONDS - $START_TIME))
+flag="false"
+
+while [ "$flag" = "false" ]
+do
+echo "
+=Lab 225==========================Choose Ski Area================================
+Number Users = U  Number to select = N   C = Connections status G=Good or B=Bad
+===================================================================================
+|N |$cn$us  City             City             $space1 City            $space2 City
+| 1|$jj01$pp01 a-basin   | 2|$jj02$pp02 ajax      | 3|$jj03$pp03 beaver-creek| 4|$jj04$pp04 breckenridge   
+| 5|$jj05$pp05 buttermilk| 6|$jj06$pp06 cooper    | 7|$jj07$pp07 copper-mtn  | 8|$jj08$pp08 crested-butte    
+| 9|$jj09$pp09 eldora    |10|$jj10$pp10 grandranch|11|$jj11$pp11 aspen-high  |12|$jj12$pp12 howelsen-hill  
+|13|$jj13$pp13 keystone  |14|$jj14$pp14 loveland  |15|$jj15$pp15 mary-jane   |16|$jj16$pp16 monarch   
+|17|$jj17$pp17 powderhorn|18|$jj18$pp18 purgatory |19|$jj19$pp19 silverton   |20|$jj20$pp20 snowmass
+|21|$jj21$pp21 steamboat |22|$jj22$pp22 sunlight  |23|$jj23$pp23 telluride   |24|$jj24$pp24 vail
+|25|$jj25$pp22 winterpark|26|$jj26$pp26 wolf-creek
+-----------------------------------------------------------------------------------
+Total Time Taken: $ELAPSED_TIME Seconds
+===================================================================================="
+
+
+read -p "Enter the NUMBER of Ski Area you want to use: " input1
+
+if [ "$input1" = "exit" ] || [ "$input1" = "exit()" ] || [ "$input1" = "exit(1)" ] || [ "$input1" = "q" ] || [ "$input1" = "quit" ] || [ "$input1" = "quit()" ] || [ "$input1" = "quit(1)" ] || [ "$input1" = "stop" ];
+	then
+	exit 1 
+	fi
+
+if [[ "$input1" -ge 1 && "$input1" -le 26 ]] ;
+then
+flag="true"
+else
+flag="false"
+echo ""
+echo "************************************************"
+echo "Your input of $input1 is not right"
+echo "Please put number range of 1 -26"
+echo "You need to put in something like 1 or 15 or 26"
+echo "Try Again"
+echo "************************************************"
+fi
+done
+
+
+
+
+
+
+
+	p1="sshpass -p "
+	p2="'"
+	p3="'"
+	p4=" ssh -q -o "
+	p5="'"
+	p6="StrictHostKeyChecking"
+	p7=" no"
+	p8="'"
+	p9=" -X "
+	p10="@"
+	p11=".cs.colostate.edu"
+
+
+	if [ "$input1" = "1" ];
+	then
+	g0="a-basin"
+	eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$g0$p11
+	fi
+
+	if [ "$input1" = "2" ];
+	then
+	g1="ajax"
+	eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$g1$p11
+	fi
+
+	if [ "$input1" = "3" ];
+	then
+	g2="beaver-creek"
+	eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$g2$p11
+	fi
+
+	if [ "$input1" = "4" ];
+	then
+	g3="breckenridge"
+	eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$g3$p11
+	fi
+
+	if [ "$input1" = "5" ];
+	then
+	g4="buttermilk"
+	eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$g4$p11
+	fi
+
+	if [ "$input1" = "6" ];
+	then
+	g5="cooper"
+	eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$g5$p11
+	fi
+
+	if [ "$input1" = "7" ];
+	then
+	g6="copper-mtn"
+	eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$g6$p11
+	fi
+
+	if [ "$input1" = "8" ];
+	then
+	g7="crested-butte"
+	eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$g7$p11
+	fi
+
+	if [ "$input1" = "9" ];
+	then
+	g8="eldora"
+	eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$g8$p11
+	fi
+	if [ "$input1" = "10" ];
+	then
+	g9="grandby-ranch"
+	eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$g9$p11
+	fi
+	if [ "$input1" = "11" ];
+	then
+	g10="aspen-highlands"
+	eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$g10$p11
+	fi
+	if [ "$input1" = "12" ];
+	then
+	g11="howelsen-hill"
+	eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$g11$p11
+	fi
+	if [ "$input1" = "13" ];
+	then
+	g12="keystone"
+	eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$g12$p11
+	fi
+	if [ "$input1" = "14" ];
+	then
+	g13="loveland"
+	eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$g13$p11
+	fi
+
+	if [ "$input1" = "15" ];
+	then
+	g14="mary-jane"
+
+	eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$g14$p11
+	fi
+
+	if [ "$input1" = "16" ];
+	then
+	g15="monarch"
+	eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$g15$p11
+	fi
+
+	if [ "$input1" = "17" ];
+	then
+	g16="powderhorn"
+
+	eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$g16$p11
+	fi
+
+	if [ "$input1" = "18" ];
+	then
+	g17="purgatory"
+	eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$g17$p11
+	fi
+	if [ "$input1" = "19" ];
+	then
+	g18="silverton"
+	eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$g18$p11
+	fi
+	if [ "$input1" = "20" ];
+	then
+	g19="snowmass"
+	eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$g19$p11
+	fi
+	if [ "$input1" = "21" ];
+	then
+	g20="steamboat"
+	eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$g20$p11
+	fi
+	if [ "$input1" = "22" ];
+	then
+	g21="sunlight"
+	eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$g21$p11
+	fi
+	if [ "$input1" = "23" ];
+	then
+	g22="telluride"
+	eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$g22$p11
+	fi
+	if [ "$input1" = "24" ];
+	then
+	g23="vail"
+	eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$g23$p11
+	fi
+	if [ "$input1" = "25" ];
+	then
+	g24="winter-park"
+	eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$g24$p11
+	fi
+	if [ "$input1" = "26" ];
+	then
+	g25="wolf-creek"
+	eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$g25$p11
+	fi
+	fi
+
+
+if [ "$input" = "325" ];
+then
+rand=$[ $RANDOM % 30 ]
+echo ${fact[$rand]} 
+echo " "
+
+START_TIME=$SECONDS
+#==================================================================================================================================================
+
+#=====================================================================
+	la60="anchovy"
+	la61="barracuda"
+	la62="blowfish"
+	la63="bonito"
+	la64="brill"
+	la65="bullhead"
+	la66="char"
+	la67="cod"
+	la68="dorado"
+	la69="eel"
+	la70="flounder"
+	la71="grouper"
+	la72="halibut"
+	la73="herring"
+	la74="mackerel"
+	la75="marlin"
+	la76="perch"
+	la77="pollock"
+	la78="sardine"
+	la79="shark"
+	la80="sole"
+	la81="swordfish"
+	la82="tarpon"
+	la83="turbot"
+	la84="tuna"
+	la85="wahoo"
+
+	dom=".cs.colostate.edu"
+	HOST="$la60$dom"
+	fping  $HOST 1>/dev/null 2>/dev/null
+	SUCCESS=$?
+	if [ $SUCCESS -eq 0 ]
+	then
+	  mm01="G|"
+	else
+	  mm01="B|"
+	fi
+	HOST="$la61$dom"
+	fping  $HOST 1>/dev/null 2>/dev/null
+	SUCCESS=$?
+	if [ $SUCCESS -eq 0 ]
+	then
+	  mm02="G|"
+	else
+	  mm02="B|"
+	fi
+	HOST="$la62$dom"
+	fping  $HOST 1>/dev/null 2>/dev/null
+	SUCCESS=$?
+	if [ $SUCCESS -eq 0 ]
+	then
+	  mm03="G|"
+	else
+	  mm03="B|"
+	fi
+	HOST="$la63$dom"
+	fping  $HOST 1>/dev/null 2>/dev/null
+	SUCCESS=$?
+	if [ $SUCCESS -eq 0 ]
+	then
+	  mm04="G|"
+	else
+	  mm04="B|"
+	fi
+	HOST="$la64$dom"
+	fping  $HOST 1>/dev/null 2>/dev/null
+	SUCCESS=$?
+	if [ $SUCCESS -eq 0 ]
+	then
+	  mm05="G|"
+	else
+	  mm05="B|"
+	fi
+	HOST="$la65$dom"
+	fping  $HOST 1>/dev/null 2>/dev/null
+	SUCCESS=$?
+	if [ $SUCCESS -eq 0 ]
+	then
+	  mm06="G|"
+	else
+	  mm06="B|"
+	fi
+	HOST="$la66$dom"
+	fping  $HOST 1>/dev/null 2>/dev/null
+	SUCCESS=$?
+	if [ $SUCCESS -eq 0 ]
+	then
+	  mm07="G|"
+	else
+	  mm07="B|"
+	fi
+	HOST="$la67$dom"
+	fping  $HOST 1>/dev/null 2>/dev/null
+	SUCCESS=$?
+	if [ $SUCCESS -eq 0 ]
+	then
+	  mm08="G|"
+	else
+	  mm08="B|"
+	fi
+	HOST="$la68$dom"
+	fping  $HOST 1>/dev/null 2>/dev/null
+	SUCCESS=$?
+	if [ $SUCCESS -eq 0 ]
+	then
+	  mm09="G|"
+	else
+	  mm09="B|"
+	fi
+	HOST="$la69$dom"
+	fping  $HOST 1>/dev/null 2>/dev/null
+	SUCCESS=$?
+	if [ $SUCCESS -eq 0 ]
+	then
+	  mm10="G|"
+	else
+	  mm10="B|"
+	fi
+	HOST="$la70$dom"
+	fping  $HOST 1>/dev/null 2>/dev/null
+	SUCCESS=$?
+	if [ $SUCCESS -eq 0 ]
+	then
+	  mm11="G|"
+	else
+	  mm11="B|"
+	fi
+	HOST="$la71$dom"
+	fping  $HOST 1>/dev/null 2>/dev/null
+	SUCCESS=$?
+	if [ $SUCCESS -eq 0 ]
+	then
+	  mm12="G|"
+	else
+	  mm12="B|"
+	fi
+	HOST="$la72$dom"
+	fping  $HOST 1>/dev/null 2>/dev/null
+	SUCCESS=$?
+	if [ $SUCCESS -eq 0 ]
+	then
+	  mm13="G|"
+	else
+	  mm13="B|"
+	fi
+	HOST="$la73$dom"
+	fping  $HOST 1>/dev/null 2>/dev/null
+	SUCCESS=$?
+	if [ $SUCCESS -eq 0 ]
+	then
+	  mm14="G|"
+	else
+	  mm14="B|"
+	fi
+	HOST="$la74$dom"
+	fping  $HOST 1>/dev/null 2>/dev/null
+	SUCCESS=$?
+	if [ $SUCCESS -eq 0 ]
+	then
+	  mm15="G|"
+	else
+	  mm15="B|"
+	fi
+	HOST="$la75$dom"
+	fping  $HOST 1>/dev/null 2>/dev/null
+	SUCCESS=$?
+	if [ $SUCCESS -eq 0 ]
+	then
+	  mm16="G|"
+	else
+	  mm16="B|"
+	fi
+	HOST="$la76$dom"
+	fping  $HOST 1>/dev/null 2>/dev/null
+	SUCCESS=$?
+	if [ $SUCCESS -eq 0 ]
+	then
+	  mm17="G|"
+	else
+	  mm17="B|"
+	fi
+	HOST="$la77$dom"
+	fping  $HOST 1>/dev/null 2>/dev/null
+	SUCCESS=$?
+	if [ $SUCCESS -eq 0 ]
+	then
+	  mm18="G|"
+	else
+	  mm18="B|"
+	fi
+	HOST="$la78$dom"
+	fping  $HOST 1>/dev/null 2>/dev/null
+	SUCCESS=$?
+	if [ $SUCCESS -eq 0 ]
+	then
+	  mm19="G|"
+	else
+	  mm19="B|"
+	fi
+	HOST="$la79$dom"
+	fping  $HOST 1>/dev/null 2>/dev/null
+	SUCCESS=$?
+	if [ $SUCCESS -eq 0 ]
+	then
+	  mm20="G|"
+	else
+	  mm20="B|"
+	fi
+	HOST="$la80$dom"
+	fping  $HOST 1>/dev/null 2>/dev/null
+	SUCCESS=$?
+	if [ $SUCCESS -eq 0 ]
+	then
+	  mm21="G|"
+	else
+	  mm21="B|"
+	fi
+	HOST="$la81$dom"
+	fping  $HOST 1>/dev/null 2>/dev/null
+	SUCCESS=$?
+	if [ $SUCCESS -eq 0 ]
+	then
+	  mm22="G|"
+	else
+	  mm22="B|"
+	fi
+	HOST="$la82$dom"
+	fping  $HOST 1>/dev/null 2>/dev/null
+	SUCCESS=$?
+	if [ $SUCCESS -eq 0 ]
+	then
+	  mm23="G|"
+	else
+	  mm23="B|"
+	fi
+	HOST="$la83$dom"
+	fping  $HOST 1>/dev/null 2>/dev/null
+	SUCCESS=$?
+	if [ $SUCCESS -eq 0 ]
+	then
+	  mm24="G|"
+	else
+	  mm24="B|"
+	fi
+	HOST="$la84$dom"
+	fping  $HOST 1>/dev/null 2>/dev/null
+	SUCCESS=$?
+	if [ $SUCCESS -eq 0 ]
+	then
+	  mm25="G|"
+	else
+	  mm25="B|"
+	fi
+	HOST="$la85$dom"
+	fping  $HOST 1>/dev/null 2>/dev/null
+	SUCCESS=$?
+	if [ $SUCCESS -eq 0 ]
+	then
+	  mm26="G|"
+	else
+	  mm26="B|"
+	fi
+	cn="C|"
+	
+
+
+#==================================================================================================================
+
+
+	la60="anchovy"
+	la61="barracuda"
+	la62="blowfish"
+	la63="bonito"
+	la64="brill"
+	la65="bullhead"
+	la66="char"
+	la67="cod"
+	la68="dorado"
+	la69="eel"
+	la70="flounder"
+	la71="grouper"
+	la72="halibut"
+	la73="herring"
+	la74="mackerel"
+	la75="marlin"
+	la76="perch"
+	la77="pollock"
+	la78="sardine"
+	la79="shark"
+	la80="sole"
+	la81="swordfish"
+	la82="tarpon"
+	la83="turbot"
+	la84="tuna"
+	la85="wahoo"
+
+
+
+
+	ex="|"
+	p1="sshpass -p "
+	p2="'"
+	p3="'"
+	p4=" ssh -q -o "
+	p5="'"
+	p6="StrictHostKeyChecking"
+	p7=" no"
+	p8="'"
+	p9=" -X "
+	p10="@"
+	p11=".cs.colostate.edu"
+	p12=" 'who | wc -l' "
+	sp=" "
+
+number=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$la60$p11
+number1=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$la61$p11
+number2=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$la62$p11
+number3=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$la63$p11
+number4=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$la64$p11
+number5=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$la65$p11
+
+eval $number$p12 > /tmp/tmp &
+eval $number1$p12 > /tmp/tmp1 &
+eval $number2$p12 > /tmp/tmp2 &
+eval $number3$p12 > /tmp/tmp3 &
+eval $number4$p12 > /tmp/tmp4 &
+eval $number5$p12 > /tmp/tmp5 &
+
+sleep 4
+tt01=$(cat '/tmp/tmp')
+tt02=$(cat '/tmp/tmp1')
+tt03=$(cat '/tmp/tmp2')
+tt04=$(cat '/tmp/tmp3')
+tt05=$(cat '/tmp/tmp4')
+tt06=$(cat '/tmp/tmp5')
+
+
+tt01="$tt01$ex"
+tt02="$tt02$ex"
+tt03="$tt03$ex"
+tt04="$tt04$ex"
+tt05="$tt05$ex"
+tt06="$tt06$ex"
+
+
+
+
+
+rm /tmp/tmp  	
+rm /tmp/tmp1		
+rm /tmp/tmp2		
+rm /tmp/tmp3		
+rm /tmp/tmp4		
+rm /tmp/tmp5
+		ELAPSED_TIME=$(($SECONDS - $START_TIME))
+		echo -e "25%:  $ELAPSED_TIME Seconds"
+
+
+
+
+
+
+number=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$la66$p11
+number1=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$la67$p11
+number2=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$la68$p11
+number3=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$la69$p11
+number4=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$la70$p11
+number5=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$la71$p11
+
+
+eval $number$p12> /tmp/tmp &
+eval $number1$p12> /tmp/tmp1 &
+eval $number2$p12> /tmp/tmp2 &
+eval $number3$p12> /tmp/tmp3 &
+eval $number4$p12> /tmp/tmp4 &
+eval $number5$p12> /tmp/tmp5 &
+	
+sleep 4
+tt07=$(cat '/tmp/tmp')
+tt08=$(cat '/tmp/tmp1')
+tt09=$(cat '/tmp/tmp2')
+tt10=$(cat '/tmp/tmp3')
+tt11=$(cat '/tmp/tmp4')
+tt12=$(cat '/tmp/tmp5')
+
+
+tt07="$tt07$ex"
+tt08="$tt08$ex"
+tt09="$tt09$ex"
+tt10="$tt10$ex"
+tt11="$tt11$ex"
+tt12="$tt12$ex"
+
+
+
+
+
+rm /tmp/tmp  	
+rm /tmp/tmp1		
+rm /tmp/tmp2		
+rm /tmp/tmp3		
+rm /tmp/tmp4		
+rm /tmp/tmp5
+		
+		ELAPSED_TIME=$(($SECONDS - $START_TIME))
+		echo -e "50%:  $ELAPSED_TIME Seconds"
+
+
+
+
+number=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$la72$p11
+number1=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$la73$p11
+number2=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$la74$p11
+number3=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$la75$p11
+number4=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$la76$p11
+number5=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$la77$p11
+number6=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$la78$p11
+
+
+
+eval $number$p12 > /tmp/tmp &
+eval $number1$p12 > /tmp/tmp1 &
+eval $number2$p12 > /tmp/tmp2 &
+eval $number3$p12 > /tmp/tmp3 &
+eval $number4$p12 > /tmp/tmp4 &
+eval $number5$p12 > /tmp/tmp5 &
+eval $number6$p12 > /tmp/tmp6 &
+
+sleep 4
+tt13=$(cat '/tmp/tmp')
+tt14=$(cat '/tmp/tmp1')
+tt15=$(cat '/tmp/tmp2')
+tt16=$(cat '/tmp/tmp3')
+tt17=$(cat '/tmp/tmp4')
+tt18=$(cat '/tmp/tmp5')
+tt19=$(cat '/tmp/tmp6')
+
+tt13="$tt13$ex"
+tt14="$tt14$ex"
+tt15="$tt15$ex"
+tt16="$tt16$ex"
+tt17="$tt17$ex"
+tt18="$tt18$ex"
+tt19="$tt19$ex"
+
+
+
+rm /tmp/tmp  	
+rm /tmp/tmp1		
+rm /tmp/tmp2		
+rm /tmp/tmp3		
+rm /tmp/tmp4		
+rm /tmp/tmp5
+rm /tmp/tmp6
+
+	
+		
+		ELAPSED_TIME=$(($SECONDS - $START_TIME))
+		echo -e "75%:  $ELAPSED_TIME Seconds"
+
+
+number=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$la79$p11
+number1=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$la80$p11
+number2=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$la81$p11
+number3=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$la82$p11
+number4=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$la83$p11
+number5=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$la84$p11
+number6=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$la85$p11
+
+
+
+eval $number$p12 > /tmp/tmp &
+eval $number1$p12 > /tmp/tmp1 &
+eval $number2$p12 > /tmp/tmp2 &
+eval $number3$p12 > /tmp/tmp3 &
+eval $number4$p12 > /tmp/tmp4 &
+eval $number5$p12 > /tmp/tmp5 &
+eval $number6$p12 > /tmp/tmp6 &
+sleep 4
+
+tt20=$(cat '/tmp/tmp')
+tt21=$(cat '/tmp/tmp1')
+tt22=$(cat '/tmp/tmp2')
+tt23=$(cat '/tmp/tmp3')
+tt24=$(cat '/tmp/tmp4')
+tt25=$(cat '/tmp/tmp5')
+tt26=$(cat '/tmp/tmp6')
+
+
+tt20="$tt20$ex"
+tt21="$tt21$ex"
+tt22="$tt22$ex"
+tt23="$tt23$ex"
+tt24="$tt24$ex"
+tt25="$tt25$ex"
+tt26="$tt26$ex"
+
+
+
+
+
+
+rm /tmp/tmp  	
+rm /tmp/tmp1		
+rm /tmp/tmp2		
+rm /tmp/tmp3		
+rm /tmp/tmp4		
+rm /tmp/tmp5
+rm /tmp/tmp6
+
+
+
+
+
+	
+	echo ""
+	us="U|  "
+	space1="    "
+	space2="   "
+	
+
+
+
+
+
+
+
+ELAPSED_TIME=$(($SECONDS - $START_TIME))
+flag="false"
+
+while [ "$flag" = "false" ]
+do
+echo "
+=Lab 325=================Choose A Fish=================================
+Number Users = U  Number to select = N  C = Connections status G=Good or B=Bad
+============================================================================
+|N |$cn$us Fish          Fish          $space1 Fish           Fish
+| 1|$mm01$tt01 anchovy| 2|$mm02$tt02 barracuda| 3|$mm03$tt03 blowfish| 4|$mm04$tt04 bonito
+| 5|$mm05$tt05 brill  | 6|$mm06$tt06 bullhead | 7|$mm07$tt07 char    | 8|$mm08$tt08   cod 
+| 9|$mm09$tt09 dorado |10|$mm10$tt10 eel      |11|$mm11$tt11 flounder|12|$mm12$tt12 grouper  
+|13|$mm13$tt13 halibut|14|$mm14$tt14 herring  |15|$mm15$tt15 mackerel|16|$mm16$tt16 marlin  
+|17|$mm17$tt17 perch  |18|$mm18$tt18 pollock  |19|$mm19$tt19 sardine |20|$mm20$tt20 shark
+|21|$mm21$tt21 sole   |22|$mm22$tt22 swordfish|23|$mm23$tt23 tarpon  |24|$mm24$tt24 turbot
+|25|$mm25$tt25 tuna   |26|$mm26$tt26 wahoo
+-------------------------------------------------------------------------
+Total Time Taken: $ELAPSED_TIME Seconds
+=========================================================================="
+
+
+read -p "Enter the NUMBER of a Fish you want to use: " input1
+
+
+
+if [ "$input1" = "exit" ] || [ "$input1" = "exit()" ] || [ "$input1" = "exit(1)" ] || [ "$input1" = "q" ] || [ "$input1" = "quit" ] || [ "$input1" = "quit()" ] || [ "$input1" = "quit(1)" ] || [ "$input1" = "stop" ];
+	then
+	exit 1 
+	fi
+
+if [[ "$input1" -ge 1 && "$input1" -le 27 ]] ;
+then
+flag="true"
+else
+flag="false"
+echo "************************************************"
+echo "Your input of $input1 is not right"
+echo "Please put number in range 1- 26"
+echo "You need to put in something like 1 or 12 or 24"
+echo "Try Again"
+echo "************************************************"
+fi
+done
+
+
+
+
+
+
+
+
+
+
+	p1="sshpass -p "
+	p2="'"
+	p3="'"
+	p4=" ssh -q -o "
+	p5="'"
+	p6="StrictHostKeyChecking"
+	p7=" no"
+	p8="'"
+	p9=" -X "
+	p10="@"
+	p11=".cs.colostate.edu"
+
+
+
+	if [ "$input1" = "1" ];
+	then
+	f0="anchovy"
+	eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$f0$p11
+	fi
+
+
+	if [ "$input1" = "2" ];
+	then
+	f1="barracuda"
+	eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$f1$p11
+	fi
+
+	if [ "$input1" = "3" ];
+	then
+	f2="blowfish"
+	eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$f2$p11
+	fi
+	if [ "$input1" = "4" ];
+	then
+	f3="bonito"
+	eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$f3$p11
+	fi
+	if [ "$input1" = "5" ];
+	then
+	f4="brill"
+	eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$f4$p11
+	fi
+
+	if [ "$input1" = "6" ];
+	then
+	f5="bullhead"
+	eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$f5$p11
+	fi
+
+	if [ "$input1" = "7" ];
+	then
+	f6="char"
+	eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$f6$p11
+	fi
+
+
+	if [ "$input1" = "8" ];
+	then
+	f7="cod"
+	eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$f7$p11
+	fi
+
+	if [ "$input1" = "9" ];
+	then
+	f8="dorado"
+	eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$f8$p11
+	fi
+
+	if [ "$input1" = "10" ];
+	then
+	f9="eel"
+	eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$f9$p11
+	fi
+
+	if [ "$input1" = "11" ];
+	then
+	f10="flounder"
+	eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$f10$p11
+	fi
+
+	if [ "$input1" = "12" ];
+	then
+	f11="grouper"
+	eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$f11$p11
+	fi
+
+	if [ "$input1" = "13" ];
+	then
+	f12="halibut"
+	eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$f12$p11
+	fi
+
+	if [ "$input1" = "14" ];
+	then
+	f13="herring"
+	eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$f13$p11
+	fi
+
+	if [ "$input1" = "15" ];
+	then
+	f14="mackerel"
+	eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$f14$p11
+	fi
+
+	if [ "$input1" = "16" ];
+	then
+	f15="marlin"
+	eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$f15$p11
+	fi
+
+	if [ "$input1" = "17" ];
+	then
+	f16="perch"
+	eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$f16$p11
+	fi
+
+	if [ "$input1" = "18" ];
+	then
+	f17="pollock"
+	eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$f17$p11
+	fi
+
+	if [ "$input1" = "19" ];
+	then
+	f18="sardine"
+	eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$f18$p11
+	fi
+
+	if [ "$input1" = "20" ];
+	then
+	f19="shark"
+	eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$f19$p11
+	fi
+
+	if [ "$input1" = "21" ];
+	then
+	f20="sole"
+	eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$f20$p11
+	fi
+
+	if [ "$input1" = "22" ];
+	then
+	f21="swordfish"
+	eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$f21$p11
+	fi
+
+	if [ "$input1" = "23" ];
+	then
+	f22="tarpon"
+	eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$f22$p11
+	fi
+	if [ "$input1" = "24" ];
+	then
+	f23="turbot"
+	eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$f23$p11
+	fi
+
+	if [ "$input1" = "25" ];
+	then
+	f24="tuna"
+	eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$f24$p11
+	fi
+
+
+	if [ "$input1" = "26" ];
+	then
+	f25="wahoo"
+	eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$f25$p11
+	fi
+	fi
+
+
+if [ "$input" = "315" ];
+	then
+rand=$[ $RANDOM % 30 ]
+echo ${fact[$rand]} 
+	echo ""
+START_TIME=$SECONDS
+bbb1="bentley"	
+bbb2="bugatti"		
+bbb3="ferrari"		
+bbb4="jaguar"	
+bbb5="lamborghini"	
+bbb6="lotus"	
+bbb7="maserati"	
+bbb8="porsche"	
+	ex="|"
+	p1="sshpass -p "
+	p2="'"
+	p3="'"
+	p4=" ssh -q -o "
+	p5="'"
+	p6="StrictHostKeyChecking"
+	p7=" no"
+	p8="'"
+	p9=" -X "
+	p10="@"
+	p11=".cs.colostate.edu"
+	p12=" 'who | wc -l' "
+	sp=" "
+
+number=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$bbb1$p11
+number1=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$bbb2$p11
+number2=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$bbb3$p11
+number3=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$bbb4$p11
+number4=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$bbb5$p11
+number5=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$bbb6$p11
+number6=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$bbb7$p11
+number7=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$bbb8$p11
+
+
+eval $number$p12 > /tmp/tmp &
+eval $number1$p12 > /tmp/tmp1 &
+eval $number2$p12 > /tmp/tmp2 &
+eval $number3$p12 > /tmp/tmp3 &
+eval $number4$p12 > /tmp/tmp4 &
+eval $number5$p12 > /tmp/tmp5 &
+eval $number6$p12 > /tmp/tmp6 &
+eval $number7$p12 > /tmp/tmp7 &
+sleep 4
+bbb1=$(cat '/tmp/tmp')
+bbb2=$(cat '/tmp/tmp1')
+bbb3=$(cat '/tmp/tmp2')
+bbb4=$(cat '/tmp/tmp3')
+bbb5=$(cat '/tmp/tmp4')
+bbb6=$(cat '/tmp/tmp5')
+bbb7=$(cat '/tmp/tmp6')
+bbb8=$(cat '/tmp/tmp7')
+
+
+bbb1="$bbb1$ex"
+bbb2="$bbb2$ex"
+bbb3="$bbb3$ex"
+bbb4="$bbb4$ex"
+bbb5="$bbb5$ex"
+bbb6="$bbb6$ex"
+bbb7="$bbb7$ex"
+bbb8="$bbb8$ex"
+
+
+rm /tmp/tmp  	
+rm /tmp/tmp1		
+rm /tmp/tmp2		
+rm /tmp/tmp3		
+rm /tmp/tmp4		
+rm /tmp/tmp5
+rm /tmp/tmp6
+rm /tmp/tmp7
+
+HOST="$bbb1$dom"
+	fping  $HOST 1>/dev/null 2>/dev/null
+	SUCCESS=$?
+	if [ $SUCCESS -eq 0 ]
+	then
+	  ccc1="G|"
+	else
+	  ccc1="B|"
+	fi
+HOST="$bbb2$dom"
+	fping  $HOST 1>/dev/null 2>/dev/null
+	SUCCESS=$?
+	if [ $SUCCESS -eq 0 ]
+	then
+	  ccc2="G|"
+	else
+	  ccc2="B|"
+	fi
+HOST="$bbb3$dom"
+	fping  $HOST 1>/dev/null 2>/dev/null
+	SUCCESS=$?
+	if [ $SUCCESS -eq 0 ]
+	then
+	  ccc3="G|"
+	else
+	  ccc3="B|"
+	fi
+HOST="$bbb4$dom"
+	fping  $HOST 1>/dev/null 2>/dev/null
+	SUCCESS=$?
+	if [ $SUCCESS -eq 0 ]
+	then
+	  ccc4="G|"
+	else
+	  ccc4="B|"
+	fi
+HOST="$bbb5$dom"
+	fping  $HOST 1>/dev/null 2>/dev/null
+	SUCCESS=$?
+	if [ $SUCCESS -eq 0 ]
+	then
+	  ccc5="G|"
+	else
+	  ccc5="B|"
+	fi
+HOST="$bbb6$dom"
+	fping  $HOST 1>/dev/null 2>/dev/null
+	SUCCESS=$?
+	if [ $SUCCESS -eq 0 ]
+	then
+	  ccc6="G|"
+	else
+	  ccc6="B|"
+	fi
+HOST="$bbb7$dom"
+	fping  $HOST 1>/dev/null 2>/dev/null
+	SUCCESS=$?
+	if [ $SUCCESS -eq 0 ]
+	then
+	  ccc7="G|"
+	else
+	  ccc7="B|"
+	fi
+HOST="$bbb8$dom"
+	fping  $HOST 1>/dev/null 2>/dev/null
+	SUCCESS=$?
+	if [ $SUCCESS -eq 0 ]
+	then
+	  ccc8="G|"
+	else
+	  ccc8="B|"
+	fi
+cn="C|"
+us="U|  "
+ELAPSED_TIME=$(($SECONDS - $START_TIME))
+flag="false"
+
+while [ "$flag" = "false" ]
+do
+echo "
+=Lab 315=============Choose A car=============
+Number Users = U  Number to select = N   
+C = Connections status G=Good or B=Bad
+==============================================
+|N|$cn$us Car         Car        
+|1|$ccc1$bbb1 bentley     |2|$ccc2$bbb2 bugatti
+|3|$ccc3$bbb3 ferrari     |4|$ccc4$bbb4 jaguar
+|5|$ccc5$bbb5 lamborghini |6|$ccc6$bbb6 lotus
+|7|$ccc7$bbb7 maserati    |8|$ccc8$bbb8 porsche  
+----------------------------------------------
+Total Time Taken: $ELAPSED_TIME Seconds
+=============================================="
+
+read -p "Enter the NUMBER of a Car you want to use: " input1
+
+if [ "$input1" = "exit" ] || [ "$input1" = "exit()" ] || [ "$input1" = "exit(1)" ] || [ "$input1" = "q" ] || [ "$input1" = "quit" ] || [ "$input1" = "quit()" ] || [ "$input1" = "quit(1)" ] || [ "$input1" = "stop" ];
+	then
+	exit 1 
+	fi
+
+if [[ "$input1" -ge 1 && "$input1" -le 9 ]] ;
+then
+flag="true"
+else
+flag="false"
+echo "************************************************"
+echo "Your input of $input1 is not right"
+echo "Please put number in range 1- 26"
+echo "You need to put in something like 1 or 12 or 24"
+echo "Try Again"
+echo "************************************************"
+fi
+done
+
+if [ "$input1" = "1" ];
+	then
+	f0="bentley"
+	eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$f0$p11
+	fi
+
+
+	if [ "$input1" = "2" ];
+	then
+	f1="bugatti"
+	eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$f1$p11
+	fi
+
+	if [ "$input1" = "3" ];
+	then
+	f2="ferrari"
+	eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$f2$p11
+	fi
+	if [ "$input1" = "4" ];
+	then
+	f3="jaguar"
+	eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$f3$p11
+	fi
+	if [ "$input1" = "5" ];
+	then
+	f4="lamborghini"
+	eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$f4$p11
+	fi
+
+	if [ "$input1" = "6" ];
+	then
+	f5="lotus"
+	eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$f5$p11
+	fi
+
+	if [ "$input1" = "7" ];
+	then
+	f6="maserati"
+	eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$f6$p11
+	fi
+	if [ "$input1" = "8" ];
+	then
+	f7="porsche "
+	eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$f7$p11
+	fi
+
+
+fi
+
+
+if [ "$input" = "475" ];
+	then
+rand=$[ $RANDOM % 30 ]
+echo ${fact[$rand]} 
+	echo ""
+START_TIME=$SECONDS
+ddd1="corvette"	
+ddd2="mustang"		
+ddd3="yam"		
+ddd4="zucchini"	
+ddd5="durango"	
+ddd6="creede"	
+ddd7="phi"	
+ddd8="chi"
+ddd9="psi"	
+	ex="|"
+	p1="sshpass -p "
+	p2="'"
+	p3="'"
+	p4=" ssh -q -o "
+	p5="'"
+	p6="StrictHostKeyChecking"
+	p7=" no"
+	p8="'"
+	p9=" -X "
+	p10="@"
+	p11=".cs.colostate.edu"
+	p12=" 'who | wc -l' "
+	sp=" "
+
+number=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$ddd1$p11
+number1=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$ddd2$p11
+number2=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$ddd3$p11
+number3=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$ddd4$p11
+number4=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$ddd5$p11
+number5=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$ddd6$p11
+number6=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$ddd7$p11
+number7=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$ddd8$p11
+number8=$p1$p2$pass$p3$p4$p5$p6$p7$p8$sp$name$p10$ddd9$p11
+
+eval $number$p12 > /tmp/tmp &
+eval $number1$p12 > /tmp/tmp1 &
+eval $number2$p12 > /tmp/tmp2 &
+eval $number3$p12 > /tmp/tmp3 &
+eval $number4$p12 > /tmp/tmp4 &
+eval $number5$p12 > /tmp/tmp5 &
+eval $number6$p12 > /tmp/tmp6 &
+eval $number7$p12 > /tmp/tmp7 &
+eval $number8$p12 > /tmp/tmp8 &
+sleep 4
+ddd1=$(cat '/tmp/tmp')
+ddd2=$(cat '/tmp/tmp1')
+ddd3=$(cat '/tmp/tmp2')
+ddd4=$(cat '/tmp/tmp3')
+ddd5=$(cat '/tmp/tmp4')
+ddd6=$(cat '/tmp/tmp5')
+ddd7=$(cat '/tmp/tmp6')
+ddd8=$(cat '/tmp/tmp7')
+ddd9=$(cat '/tmp/tmp8')
+
+ddd1="$ddd1$ex"
+ddd2="$ddd2$ex"
+ddd3="$ddd3$ex"
+ddd4="$ddd4$ex"
+ddd5="$ddd5$ex"
+ddd6="$ddd6$ex"
+ddd7="$ddd7$ex"
+ddd8="$ddd8$ex"
+ddd9="$ddd9$ex"
+
+rm /tmp/tmp  	
+rm /tmp/tmp1		
+rm /tmp/tmp2		
+rm /tmp/tmp3		
+rm /tmp/tmp4		
+rm /tmp/tmp5
+rm /tmp/tmp6
+rm /tmp/tmp7
+rm /tmp/tmp8
+
+HOST="$ddd1$dom"
+	fping  $HOST 1>/dev/null 2>/dev/null
+	SUCCESS=$?
+	if [ $SUCCESS -eq 0 ]
+	then
+	  fff1="G|"
+	else
+	  fff1="B|"
+	fi
+HOST="$ddd2$dom"
+	fping  $HOST 1>/dev/null 2>/dev/null
+	SUCCESS=$?
+	if [ $SUCCESS -eq 0 ]
+	then
+	  fff2="G|"
+	else
+	  fff2="B|"
+	fi
+HOST="$ddd3$dom"
+	fping  $HOST 1>/dev/null 2>/dev/null
+	SUCCESS=$?
+	if [ $SUCCESS -eq 0 ]
+	then
+	  fff3="G|"
+	else
+	  fff3="B|"
+	fi
+HOST="$ddd4$dom"
+	fping  $HOST 1>/dev/null 2>/dev/null
+	SUCCESS=$?
+	if [ $SUCCESS -eq 0 ]
+	then
+	  fff4="G|"
+	else
+	  fff4="B|"
+	fi
+HOST="$ddd5$dom"
+	fping  $HOST 1>/dev/null 2>/dev/null
+	SUCCESS=$?
+	if [ $SUCCESS -eq 0 ]
+	then
+	  fff5="G|"
+	else
+	  fff5="B|"
+	fi
+HOST="$ddd6$dom"
+	fping  $HOST 1>/dev/null 2>/dev/null
+	SUCCESS=$?
+	if [ $SUCCESS -eq 0 ]
+	then
+	  fff6="G|"
+	else
+	  fff6="B|"
+	fi
+HOST="$ddd7$dom"
+	fping  $HOST 1>/dev/null 2>/dev/null
+	SUCCESS=$?
+	if [ $SUCCESS -eq 0 ]
+	then
+	  fff7="G|"
+	else
+	  fff7="B|"
+	fi
+HOST="$ddd8$dom"
+	fping  $HOST 1>/dev/null 2>/dev/null
+	SUCCESS=$?
+	if [ $SUCCESS -eq 0 ]
+	then
+	  fff8="G|"
+	else
+	  fff8="B|"
+	fi
+HOST="$ddd9$dom"
+	fping  $HOST 1>/dev/null 2>/dev/null
+	SUCCESS=$?
+	if [ $SUCCESS -eq 0 ]
+	then
+	  fff9="G|"
+	else
+	  fff9="B|"
+	fi
+
+cn="C|"
+us="U|  "
+ELAPSED_TIME=$(($SECONDS - $START_TIME))
+flag="false"
+
+while [ "$flag" = "false" ]
+do
+echo "
+=Lab 315=================Choose A Name=========
+Number Users = U  Number to select = N   
+C = Connections status G=Good or B=Bad
+================================================
+|N |$cn$us   Name        Name        
+| 1|$fff1$ddd1 corvette | 2|$fff2$ddd2 mustang
+| 3|$fff3$ddd3 yam      | 4|$fff4$ddd4 zucchini
+| 5|$fff5$ddd5 durango  | 6|$fff6$ddd6 creede
+| 7|$fff7$ddd7 phi      | 8|$fff8$ddd8 chi
+| 9|$fff8$ddd8 ps1
+--------------------------------------------------
+Total Time Taken: $ELAPSED_TIME Seconds
+=================================================="
+
+ddd1="corvette"	
+ddd2="mustang"		
+ddd3="yam"		
+ddd4="zucchini"	
+ddd5="durango"	
+ddd6="creede"	
+ddd7="phi"	
+ddd8="chi"
+ddd9="psi"
+
+
+read -p "Enter the NUMBER of a Car you want to use: " input1
+
+if [ "$input1" = "exit" ] || [ "$input1" = "exit()" ] || [ "$input1" = "exit(1)" ] || [ "$input1" = "q" ] || [ "$input1" = "quit" ] || [ "$input1" = "quit()" ] || [ "$input1" = "quit(1)" ] || [ "$input1" = "stop" ];
+	then
+	exit 1 
+	fi
+
+if [[ "$input1" -ge 1 && "$input1" -le 10 ]] ;
+then
+flag="true"
+else
+flag="false"
+echo "************************************************"
+echo "Your input of $input1 is not right"
+echo "Please put number in range 1- 26"
+echo "You need to put in something like 1 or 3 or 9"
+echo "Try Again"
+echo "************************************************"
+fi
+done
+
+if [ "$input1" = "1" ];
+	then
+	f0="corvette"
+	eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$f0$p11
+	fi
+
+
+	if [ "$input1" = "2" ];
+	then
+	f1="mustang"
+	eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$f1$p11
+	fi
+
+	if [ "$input1" = "3" ];
+	then
+	f2="yam"
+	eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$f2$p11
+	fi
+	if [ "$input1" = "4" ];
+	then
+	f3="zucchini"
+	eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$f3$p11
+	fi
+	if [ "$input1" = "5" ];
+	then
+	f4="durango"
+	eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$f4$p11
+	fi
+
+	if [ "$input1" = "6" ];
+	then
+	f5="creede"
+	eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$f5$p11
+	fi
+
+	if [ "$input1" = "7" ];
+	then
+	f6="phi"
+	eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$f6$p11
+	fi
+	if [ "$input1" = "8" ];
+	then
+	f7="chi"
+	eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$f7$p11
+	fi
+if [ "$input1" = "9" ];
+	then
+	f8="psi"
+	eval $p1$p2$pass$p3$p4$p5$p6$p7$p8$p9$name$p10$f8$p11
+	fi
+
+fi
+
+if [ "$input" = "info" ];
+then
+echo "
+================================================================================================================================================
+|   |    NAME	     |         TYPE	     |    CPU  |  RAM |      OS       |  USE    |  LOCATION	  |     S/N      |   MAC ADDRESS  
+|1  |albany	     | HP-Z420-XeonE5-2650v2 | 8x2.6GH | 32Gb | Linux(Fedora) | general | 120-unix-lab    | 2UA3349121X  | 2c:44:fd:26:90:0e
+|2  |annapolis	     | HP-Z420-XeonE5-2650v2 | 8x2.6GH | 32Gb | Linux(Fedora) | general | 120-unix-lab    | 2UA3349121Q  | 2c:44:fd:26:8f:f0
+|3  |atlanta	     | HP-Z420-XeonE5-2650v2 | 8x2.6GH | 32Gb | Linux(Fedora) | general | 120-unix-lab    | 2UA3349120Y  | 2c:44:fd:15:3b:a7
+|4  |augusta	     | HP-Z420-XeonE5-2650v2 | 8x2.6GH | 32Gb | Linux(Fedora) | general | 120-unix-lab    | 2UA33349120H | 2c:44:fd:26:8c:81
+|5  |austin	     | HP-Z420-XeonE5-2650v2 | 8x2.6GH | 32Gb | Linux(Fedora) | general | 120-unix-lab    | 2UA33349121W | 2c:44:fd:15:3d:ca
+|6  |baton-rouge     | HP-Z420-XeonE5-2650v2 | 8x2.6GH | 32Gb | Linux(Fedora) | general | 120-unix-lab    | 2UA33349120T | 2c:44:fd:1c:7b:bd
+|7  |bismarck	     | HP-Z420-XeonE5-2650v2 | 8x2.6GH | 32Gb | Linux(Fedora) | general | 120-unix-lab    | 2UA33349121G | 2c:44:fd:15:3d:cd
+|8  |boise	     | HP-Z420-XeonE5-2650v2 | 8x2.6GH | 32Gb | Linux(Fedora) | general | 120-unix-lab    | 2UA33349120V | 74:46:a0:c3:bd:c6
+|9  |boston	     | HP-Z420-XeonE5-2650v2 | 8x2.6GH | 32Gb | Linux(Fedora) | general | 120-unix-lab    | 2UA33349121N | 2c:44:fd:15:3d:c7
+|10 |carson-city     | HP-Z420-XeonE5-2650v2 | 8x2.6GH | 32Gb | Linux(Fedora) | general | 120-unix-lab    | 2UA33349120X | 2c:44:fd:26:8f:6c
+|11 |charleston	     | HP-Z420-XeonE5-2650v2 | 8x2.6GH | 32Gb | Linux(Fedora) | general | 120-unix-lab    | 2UA33349120P | 2c:44:fd:1c:79:81
+|12 |cheyenne	     | HP-Z420-XeonE5-2650v2 | 8x2.6GH | 32Gb | Linux(Fedora) | general | 120-unix-lab    | 2UA333491211 | 74:46:a0:c3:bd:7e
+|13 |columbia	     | HP-Z420-XeonE5-2650v2 | 8x2.6GH | 32Gb | Linux(Fedora) | general | 120-unix-lab    | 2UA33349121S | 74:46:a0:c3:be:ba
+|14 |columbus-oh     | HP-Z420-XeonE5-2650v2 | 8x2.6GH | 32Gb | Linux(Fedora) | general | 120-unix-lab    | 2UA33349120Z | 2c:44:fd:26:8e:3b
+|15 |concord	     | HP-Z420-XeonE5-2650v2 | 8x2.6GH | 32Gb | Linux(Fedora) | general | 120-unix-lab    | 2UA33349120Q | 2c:44:fd:15:3c:1d
+|16 |denver	     | HP-Z420-XeonE5-2650v2 | 8x2.6GH | 32Gb | Linux(Fedora) | general | 120-unix-lab    | 2UA33349121Y | 74:46:a0:c3:be:b9
+|17 |des-moines	     | HP-Z420-XeonE5-2650v2 | 8x2.6GH | 32Gb | Linux(Fedora) | general | 120-unix-lab    | 2UA33349121L | 2c:44:fd:15:3d:c5
+|18 |dover	     | HP-Z420-XeonE5-2650v2 | 8x2.6GH | 32Gb | Linux(Fedora) | general | 120-unix-lab    | 2UA333491218 | 2c:44:fd:15:3b:5c
+|19 |frankfort	     | HP-Z420-XeonE5-2650v2 | 8x2.6GH | 32Gb | Linux(Fedora) | general | 120-unix-lab    | 2UA33349120K | 2c:44:fd:1c:78:57
+|20 |harrisburg	     | HP-Z420-XeonE5-2650v2 | 8x2.6GH | 32Gb | Linux(Fedora) | general | 120-unix-lab    | 2UA33349120N | 2c:44:fd:1c:79:1b
+|21 |hartford	     | HP-Z420-XeonE5-2650v2 | 8x2.6GH | 32Gb | Linux(Fedora) | general | 120-unix-lab    | 2UA33349121B | 2c:44:fd:1c:77:d6
+|22 |helena	     | HP-Z420-XeonE5-2650v2 | 8x2.6GH | 32Gb | Linux(Fedora) | general | 120-unix-lab    | 2UA33349120S | 2c:44:fd:1c:7b:26
+|23 |honolulu	     | HP-Z420-XeonE5-2650v2 | 8x2.6GH | 32Gb | Linux(Fedora) | general | 120-unix-lab    | 2UA33349121T | 2c:44:fd:1c:7c:64
+|24 |indianapolis    | HP-Z420-XeonE5-2650v2 | 8x2.6GH | 32Gb | Linux(Fedora) | general | 120-unix-lab    | 2UA33349120R | 2c:44:fd:1c:7b:c4
+|25 |jackson	     | HP-Z420-XeonE5-2650v2 | 8x2.6GH | 32Gb | Linux(Fedora) | general | 120-unix-lab    | 2UA33349120W | 2c:44:fd:26:8f:63
+|26 |jefferson-city  | HP-Z420-XeonE5-2650v2 | 8x2.6GH | 32Gb | Linux(Fedora) | general | 120-unix-lab    | 2UA333491213 | 2c:44:fd:26:8f:68
+|27 |juneau	     | HP-Z420-XeonE5-2650v2 | 8x2.6GH | 32Gb | Linux(Fedora) | general | 120-unix-lab    | 2UA33349121H | 2c:44:fd:15:3d:d1
+|28 |lansing	     | HP-Z420-XeonE5-2650v2 | 8x2.6GH | 32Gb | Linux(Fedora) | general | 120-unix-lab    | 2UA33349121C | 2c:44:fd:15:3b:58
+|29 |lincoln	     | HP-Z420-XeonE5-2650v2 | 8x2.6GH | 32Gb | Linux(Fedora) | general | 120-unix-lab    | 2UA333491215 | 2c:44:fd:26:8f:6b
+|30 |little-rock     | HP-Z420-XeonE5-2650v2 | 8x2.6GH | 32Gb | Linux(Fedora) | general | 120-unix-lab    | 2UA33349121J | 2c:44:fd:1c:7c:61
+|31 |madison	     | HP-Z420-XeonE5-2650v2 | 8x2.6GH | 32Gb | Linux(Fedora) | general | 120-unix-lab    | 2UA333491212 | 2c:44:fd:1c:7a:71
+|32 |montgomery      | HP-Z420-XeonE5-2650v2 | 8x2.6GH | 32Gb | Linux(Fedora) | general | 120-unix-lab    | 2UA333491212 | 2c:44:fd:15:3d:c6
+|33 |montpelier      | HP-Z420-XeonE5-2650v2 | 8x2.6GH | 32Gb | Linux(Fedora) | general | 120-unix-lab    | 2UA33349120M | 2c:44:fd:1c:78:f0
+|34 |nashville	     | HP-Z420-XeonE5-2650v2 | 8x2.6GH | 32Gb | Linux(Fedora) | general | 120-unix-lab    | 2UA33349120J | 2c:44:fd:26:8c:82
+|35 |oklahoma-city   | HP-Z420-XeonE5-2650v2 | 8x2.6GH | 32Gb | Linux(Fedora) | general | 120-unix-lab    | 2UA333491221 | 2c:44:fd:1c:7a:74
+|36 |olympia	     | HP-Z420-XeonE5-2650v2 | 8x2.6GH | 32Gb | Linux(Fedora) | general | 120-unix-lab    | 2UA333491216 | 2c:44:fd:15:3b:0d
+|37 |phoenix	     | HP-Z420-XeonE5-2650v2 | 8x2.6GH | 32Gb | Linux(Fedora) | general | 120-unix-lab    | 2UA333491219 | 2c:44:fd:26:8d:1d
+|38 |pierre	     | HP-Z420-XeonE5-2650v2 | 8x2.6GH | 32Gb | Linux(Fedora) | general | 120-unix-lab    | 2UA33349121D | 2c:44:fd:26:8c:b1
+|39 |providence      | HP-Z420-XeonE5-2650v2 | 8x2.6GH | 32Gb | Linux(Fedora) | general | 120-unix-lab    | 2UA33349121R | 2c:44:fd:26:90:0f
+|40 |raleiGH         | HP-Z420-XeonE5-2650v2 | 8x2.6GH | 32Gb | Linux(Fedora) | general | 120-unix-lab    | 2UA333491214 | 74:46:a0:c3:bd:9e
+|41 |richmond	     | HP-Z420-XeonE5-2650v2 | 8x2.6GH | 32Gb | Linux(Fedora) | general | 120-unix-lab    | 2UA33349121K | 2c:44:fd:26:90:10
+|42 |sacramento      | HP-Z420-XeonE5-2650v2 | 8x2.6GH | 32Gb | Linux(Fedora) | general | 120-unix-lab    | 2UA33349121Z | 2c:44:fd:15:3d:cb
+|43 |saint-paul      | HP-Z420-XeonE5-2650v2 | 8x2.6GH | 32Gb | Linux(Fedora) | general | 120-unix-lab    | 2UA333491210 | 2c:44:fd:1c:7a:21
+|44 |salem	     | HP-Z420-XeonE5-2650v2 | 8x2.6GH | 32Gb | Linux(Fedora) | general | 120-unix-lab    | 2UA33349121P | 74:46:a0:c3:be:b3
+|45 |salt-lake-city  | HP-Z420-XeonE5-2650v2 | 8x2.6GH | 32Gb | Linux(Fedora) | general | 120-unix-lab    | 2UA333491217 | 2c:44:fd:15:3a:c2
+|46 |santa-fe	     | HP-Z420-XeonE5-2650v2 | 8x2.6GH | 32Gb | Linux(Fedora) | general | 120-unix-lab    | 2UA333491220 | 74:46:a0:c3:be:8e
+|47 |springfield     | HP-Z420-XeonE5-2650v2 | 8x2.6GH | 32Gb | Linux(Fedora) | general | 120-unix-lab    | 2UA33349121V | 2c:44:fd:1c:7c:5f
+|48 |tallahassee     | HP-Z420-XeonE5-2650v2 | 8x2.6GH | 32Gb | Linux(Fedora) | general | 120-unix-lab    | 2UA33349120G | 2c:44:fd:1c:77:e6
+|49 |topeka	     | HP-Z420-XeonE5-2650v2 | 8x2.6GH | 32Gb | Linux(Fedora) | general | 120A-unix-lab   | 2UA3349120L  | 2c:44:fd:26:8d:21
+|49 |trenton	     | HP-Z420-XeonE5-2650v2 | 8x2.6GH | 32Gb | Linux(Fedora) | general | 120A-unix-lab   | 2UA3349121F  | 2c:44:fd:15:3a:c9
+|50 |washington-dc   | HP-Z230-XeonE3-1231v3 | 4x3.4GH | 32Gb | Linux(Fedora) | general | 120A-unix-lab	  | 2UA351328K9  | 8c:dc:d4:2b:e0:59
+|51 |earth	     | HP-Z440-XeonE5-1650v4 | 6x3.6GH | 32Gb | Linux(Fedora) | general | 120E-unix-lab	  | 2UA363426J0  | dc:4a:3e:7d:0a:18
+|52 |jupiter	     | HP-Z440-XeonE5-1650v4 | 6x3.6GH | 32Gb | Linux(Fedora) | general | 120E-unix-lab	  | 2UA363426H5  | dc:4a:3e:78:b2:17
+|53 |mars	     | HP-Z440-XeonE5-1650v4 | 6x3.6GH | 32Gb | Linux(Fedora) | general | 120E-unix-lab	  | 2UA363426HZ  | dc:4a:3e:7f:11:58
+|54 |mercury	     | HP-Z440-XeonE5-1650v4 | 6x3.6GH | 32Gb | Linux(Fedora) | general | 120E-unix-lab	  | 2UA363426HS  | dc:4a:3e:78:b2:11
+|55 |neptune	     | HP-Z440-XeonE5-1650v4 | 6x3.6GH | 32Gb | Linux(Fedora) | general | 120E-unix-lab	  | 2UA363426H2  | dc:4a:3e:75:39:06
+|56 |saturn	     | HP-Z440-XeonE5-1650v4 | 6x3.6GH | 32Gb | Linux(Fedora) | general | 120E-unix-lab	  | 2UA363426HG  | dc:4a:3e:75:39:68
+|57 |uranus	     | HP-Z440-XeonE5-1650v4 | 6x3.6GH | 32Gb | Linux(Fedora) | general | 120E-unix-lab	  | 2UA363426HT  | dc:4a:3e:7c:88:f3
+|58 |venus	     | HP-Z440-XeonE5-1650v4 | 6x3.6GH | 32Gb | Linux(Fedora) | general | 120E-unix-lab	  | 2UA363426HY  | dc:4a:3e:7f:11:56
+|59 |ankara	     | HP-Z230-XeonE3-1231v3 | 4x3.4GH | 32Gb | Linux(Fedora) | general | 215-interac-lab | 2UA351328KH  | 8c:dc:d4:29:ab:ec
+|60 |bagdad	     | HP-Z230-XeonE3-1231v3 | 4x3.4GH | 32Gb | Linux(Fedora) | general | 215-interac-lab | 2UA351328JS  | 8c:dc:d4:2b:df:02
+|61 |bangkok	     | HP-Z230-XeonE3-1231v3 | 4x3.4GH | 32Gb | Linux(Fedora) | general | 215-interac-lab | 2UA351328KL  | 8c:dc:d4:27:f1:f2
+|62 |beijing	     | HP-Z230-XeonE3-1231v3 | 4x3.4GH | 32Gb | Linux(Fedora) | general | 215-interac-lab | 2UA351328KK  | 8c:dc:d4:29:ab:f3
+|63 |berlin	     | HP-Z230-XeonE3-1231v3 | 4x3.4GH | 32Gb | Linux(Fedora) | general | 215-interac-lab | 2UA351328K3  | 8c:dc:d4:27:f0:3b
+|65 |cairo	     | HP-Z230-XeonE3-1231v3 | 4x3.4GH | 32Gb | Linux(Fedora) | general | 215-interac-lab | 2UA351328JP  | 8c:dc:d4:2b:df:00
+|66 |damascus        | HP-Z230-XeonE3-1231v3 | 4x3.4GH | 32Gb | Linux(Fedora) | general | 215-interac-lab | 2UA351328JZ  | 8c:dc:d4:2b:df:09
+|67 |dhaka	     | HP-Z230-XeonE3-1231v3 | 4x3.4GH | 32Gb | Linux(Fedora) | general | 215-interac-lab | 2UA351328KG  | 8c:dc:d4:27:f1:f9
+|68 |hanoi	     | HP-Z230-XeonE3-1231v3 | 4x3.4GH | 32Gb | Linux(Fedora) | general | 215-interac-lab | 2UA351328K7  | 8c:dc:d4:29:ab:e2
+|69 |hong-kong       | HP-Z230-XeonE3-1231v3 | 4x3.4GH | 32Gb | Linux(Fedora) | general | 215-interac-lab | 2UA351328JV  | 8c:dc:d4:29:aa:d8
+|70 |jakarta	     | HP-Z230-XeonE3-1231v3 | 4x3.4GH | 32Gb | Linux(Fedora) | general | 215-interac-lab | 2UA351328JY  | 8c:dc:d4:2b:df:4a
+|71 |kabul	     | HP-Z230-XeonE3-1231v3 | 4x3.4GH | 32Gb | Linux(Fedora) | general | 215-interac-lab | 2UA351328KJ  | 8c:dc:d4:29:ab:e5
+|72 |kinshasa        | HP-Z230-XeonE3-1231v3 | 4x3.4GH | 32Gb | Linux(Fedora) | general | 215-interac-lab | 2UA351328K5  | 8c:dc:d4:27:f1:e7
+|73 |lima	     | HP-Z230-XeonE3-1231v3 | 4x3.4GH | 32Gb | Linux(Fedora) | general | 215-interac-lab | 2UA351328K8  | 8c:dc:d4:27:f1:f4
+|74 |london	     | HP-Z230-XeonE3-1231v3 | 4x3.4GH | 32Gb | Linux(Fedora) | general | 215-interac-lab | 2UA351328JW  | 8c:dc:d4:27:f0:73
+|75 |madrid	     | HP-Z230-XeonE3-1231v3 | 4x3.4GH | 32Gb | Linux(Fedora) | general | 215-interac-lab | 2UA351328KF  | 8c:dc:d4:27:f1:ff
+|76 |mexico-city     | HP-Z230-XeonE3-1231v3 | 4x3.4GH | 32Gb | Linux(Fedora) | general | 215-interac-lab | 2UA351328K4  | 8c:dc:d4:27:f1:eb
+|77 |moscow	     | HP-Z230-XeonE3-1231v3 | 4x3.4GH | 32Gb | Linux(Fedora) | general | 215-interac-lab | 2UA351328JQ  | 8c:dc:d4:29:ab:00
+|78 |pyongyang       | HP-Z230-XeonE3-1231v3 | 4x3.4GH | 32Gb | Linux(Fedora) | general | 215-interac-lab | 2UA351328KB  | 8c:dc:d4:29:ab:f4
+|79 |riyadh	     | HP-Z230-XeonE3-1231v3 | 4x3.4GH | 32Gb | Linux(Fedora) | general | 215-interac-lab | 2UA351328K1  | 8c:dc:d4:27:f0:74
+|80 |santiago        | HP-Z230-XeonE3-1231v3 | 4x3.4GH | 32Gb | Linux(Fedora) | general | 215-interac-lab | 2UA351328KC  | 8c:dc:d4:29:ab:f9
+|81 |seoul	     | HP-Z230-XeonE3-1231v3 | 4x3.4GH | 32Gb | Linux(Fedora) | general | 215-interac-lab | 2UA351328K2  | 8c:dc:d4:29:aa:d7
+|82 |singapore       | HP-Z230-XeonE3-1231v3 | 4x3.4GH | 32Gb | Linux(Fedora) | general | 215-interac-lab | 2UA351328KD  | 8c:dc:d4:29:ab:f1
+|83 |tehran	     | HP-Z230-XeonE3-1231v3 | 4x3.4GH | 32Gb | Linux(Fedora) | general | 215-interac-lab | 2UA351328JX  | 8c:dc:d4:2b:df:0f
+|84 |tokyo	     | HP-Z230-XeonE3-1231v3 | 4x3.4GH | 32Gb | Linux(Fedora) | general | 215-interac-lab | 2UA351328JT  | 8c:dc:d4:2b:df:0a
+|85 |a-basin	     | HP-Z440-XeonE5-1650v4 | 6x3.6GH | 32Gb | Linux(Fedora) | general | 225-interac-lab | 2UA363426H7  | dc:4a:3e:7c:89:02
+|86 |ajax	     | HP-Z440-XeonE5-1650v4 | 6x3.6GH | 32Gb | Linux(Fedora) | general | 225-interac-lab | 2UA363426H4  | dc:4a:3e:75:39:0b
+|87 |beaver-creek    | HP-Z440-XeonE5-1650v4 | 6x3.6GH | 32Gb | Linux(Fedora) | general | 225-interac-lab | 2UA363426H1  | dc:4a:3e:7c:88:8e
+|88 |breckenridge    | HP-Z440-XeonE5-1650v4 | 6x3.6GH | 32Gb | Linux(Fedora) | general | 225-interac-lab | 2UA363426HR  | dc:4a:3e:78:b2:56
+|89 |buttermilk      | HP-Z440-XeonE5-1650v4 | 6x3.6GH | 32Gb | Linux(Fedora) | general | 225-interac-lab | 2UA363426HB  | dc:4a:3e:78:b2:75
+|90 |cooper	     | HP-Z440-XeonE5-1650v4 | 6x3.6GH | 32Gb | Linux(Fedora) | general | 225-interac-lab | 2UA363426H9  | dc:4a:3e:75:39:7d
+|91 |copper-mtn      | HP-Z440-XeonE5-1650v4 | 6x3.6GH | 32Gb | Linux(Fedora) | general | 225-interac-lab | 2UA363426GZ  | dc:4a:3e:7c:88:8b
+|92 |crested-butte   | HP-Z440-XeonE5-1650v4 | 6x3.6GH | 32Gb | Linux(Fedora) | general | 225-interac-lab | 2UA363426HH  | dc:4a:3e:75:39:81
+|93 |eldora	     | HP-Z440-XeonE5-1650v4 | 6x3.6GH | 32Gb | Linux(Fedora) | general | 225-interac-lab | 2UA363426GY  | dc:4a:3e:78:b2:16
+|94 |grandby-ranch   | HP-Z440-XeonE5-1650v4 | 6x3.6GH | 32Gb | Linux(Fedora) | general | 225-interac-lab | 2UA363426HV  | dc:4a:3e:78:b2:76
+|95 |aspen-hiG lands | HP-Z440-XeonE5-1650v4 | 6x3.6GH | 32Gb | Linux(Fedora) | general | 225-interac-lab | 2UA363426H6  | dc:4a:3e:75:39:0a
+|96 |howelsen-hill   | HP-Z440-XeonE5-1650v4 | 6x3.6GH | 32Gb | Linux(Fedora) | general | 225-interac-lab | 2UA363426H0  | dc:4a:3e:75:38:f8
+|97 |keystone	     | HP-Z440-XeonE5-1650v4 | 6x3.6GH | 32Gb | Linux(Fedora) | general | 225-interac-lab | 2UA363426H3  | dc:4a:3e:7c:88:7e
+|98 |loveland	     | HP-Z440-XeonE5-1650v4 | 6x3.6GH | 32Gb | Linux(Fedora) | general | 225-interac-lab | 2UA363426HX  | dc:4a:3e:7d:0a:1a
+|99 |mary-jane	     | HP-Z440-XeonE5-1650v4 | 6x3.6GH | 32Gb | Linux(Fedora) | general | 225-interac-lab | 2UA363426HN  | dc:4a:3e:7c:88:fe
+|100|monarch	     | HP-Z440-XeonE5-1650v4 | 6x3.6GH | 32Gb | Linux(Fedora) | general | 225-interac-lab | 2UA363426HL  | dc:4a:3e:75:39:83
+|101|powderhorn      | HP-Z440-XeonE5-1650v4 | 6x3.6GH | 32Gb | Linux(Fedora) | general | 225-interac-lab | 2UA363426HC  | dc:4a:3e:78:b2:6e
+|102|purgatory	     | HP-Z440-XeonE5-1650v4 | 6x3.6GH | 32Gb | Linux(Fedora) | general | 225-interac-lab | 2UA363426HP  | dc:4a:3e:7c:88:ff
+|103|silverton	     | HP-Z440-XeonE5-1650v4 | 6x3.6GH | 32Gb | Linux(Fedora) | general | 225-interac-lab | 2UA363426HK  | dc:4a:3e:75:39:6d
+|104|snowmass	     | HP-Z440-XeonE5-1650v4 | 6x3.6GH | 32Gb | Linux(Fedora) | general | 225-interac-lab | 2UA363426HM  | dc:4a:3e:75:39:74
+|105|steamboat	     | HP-Z440-XeonE5-1650v4 | 6x3.6GH | 32Gb | Linux(Fedora) | general | 225-interac-lab | 2UA363426HD  | dc:4a:3e:78:b2:6c
+|106|sunliGH t	     | HP-Z440-XeonE5-1650v4 | 6x3.6GH | 32Gb | Linux(Fedora) | general | 225-interac-lab | 2UA363426H8  | dc:4a:3e:75:39:7e
+|107|telluride	     | HP-Z440-XeonE5-1650v4 | 6x3.6GH | 32Gb | Linux(Fedora) | general | 225-interac-lab | 2UA363426HF  | dc:4a:3e:7c:89:04
+|108|vail	     | HP-Z440-XeonE5-1650v4 | 6x3.6GH | 32Gb | Linux(Fedora) | general | 225-interac-lab | 2UA363426HW  | dc:4a:3e:7d:0a:17
+|109|winter-park     | HP-Z440-XeonE5-1650v4 | 6x3.6GH | 32Gb | Linux(Fedora) | general | 225-interac-lab | 2UA363426HQ  | dc:4a:3e:7c:88:87
+|110|wolf-creek      | HP-Z440-XeonE5-1650v4 | 6x3.6GH | 32Gb | Linux(Fedora) | general | 225-interac-lab | 2UA363426HJ  | dc:4a:3e:7c:88:e9
+|111|anchovy         | HP-Z440-XeonE5-1650v4 | 6x3.6GH | 32Gb | Linux(Fedora) | general | 325-interac-lab | 2UA37321Q2R  | c8:d3:ff:ba:5f:a4
+|112|barracuda	     | HP-Z440-XeonE5-1650v4 | 6x3.6GH | 32Gb | Linux(Fedora) | general | 325-interac-lab | 2UA37321Q30  | c8:d3:ff:ba:5f:a0
+|113|blowfish	     | HP-Z440-XeonE5-1650v4 | 6x3.6GH | 32Gb | Linux(Fedora) | general | 325-interac-lab | 2UA37321Q34  | c8:d3:ff:ba:5f:b0
+|114|bonito	     | HP-Z440-XeonE5-1650v4 | 6x3.6GH | 32Gb | Linux(Fedora) | general | 325-interac-lab | 2UA37321Q36  | c8:d3:ff:ba:5f:a5
+|115|brill	     | HP-Z440-XeonE5-1650v4 | 6x3.6GH | 32Gb | Linux(Fedora) | general | 325-interac-lab | 2UA37321Q2W  | c8:d3:ff:be:84:1c
+|116|bullhead	     | HP-Z440-XeonE5-1650v4 | 6x3.6GH | 32Gb | Linux(Fedora) | general | 325-interac-lab | 2UA37321Q32  | c8:d3:ff:be:84:21
+|117|char	     | HP-Z440-XeonE5-1650v4 | 6x3.6GH | 32Gb | Linux(Fedora) | general | 325-interac-lab | 2UA37321Q2T  | c8:d3:ff:ba:5f:b7
+|118|cod	     | HP-Z440-XeonE5-1650v4 | 6x3.6GH | 32Gb | Linux(Fedora) | general | 325-interac-lab | 2UA37321Q2N  | c8:d3:ff:be:81:80
+|119|dorado	     | HP-Z440-XeonE5-1650v4 | 6x3.6GH | 32Gb | Linux(Fedora) | general | 325-interac-lab | 2UA37321Q2Y  | c8:d3:ff:be:83:fa
+|120|eel	     | HP-Z440-XeonE5-1650v4 | 6x3.6GH | 32Gb | Linux(Fedora) | general | 325-interac-lab | 2UA37321Q35  | c8:d3:ff:ba:5f:ad
+|121|flounder	     | HP-Z440-XeonE5-1650v4 | 6x3.6GH | 32Gb | Linux(Fedora) | general | 325-interac-lab | 2UA37321Q2V  | c8:d3:ff:be:81:86
+|122|grouper	     | HP-Z440-XeonE5-1650v4 | 6x3.6GH | 32Gb | Linux(Fedora) | general | 325-interac-lab | 2UA37321Q39  | c8:d3:ff:ba:5f:98
+|123|halibut	     | HP-Z440-XeonE5-1650v4 | 6x3.6GH | 32Gb | Linux(Fedora) | general | 325-interac-lab | 2UA37321Q2L  | c8:d3:ff:ba:5d:26
+|124|herring	     | HP-Z440-XeonE5-1650v4 | 6x3.6GH | 32Gb | Linux(Fedora) | general | 325-interac-lab | 2UA37321Q2Z  | c8:d3:ff:ba:5d:1f
+|125|mackerel	     | HP-Z440-XeonE5-1650v4 | 6x3.6GH | 32Gb | Linux(Fedora) | general | 325-interac-lab | 2UA37321Q2X  | c8:d3:ff:be:84:20
+|126|marlin	     | HP-Z440-XeonE5-1650v4 | 6x3.6GH | 32Gb | Linux(Fedora) | general | 325-interac-lab | 2UA37321Q2J  | c8:d3:ff:ba:5c:b8
+|127|perch	     | HP-Z440-XeonE5-1650v4 | 6x3.6GH | 32Gb | Linux(Fedora) | general | 325-interac-lab | 2UA37321Q2P  | c8:d3:ff:be:81:63
+|128|pollock	     | HP-Z440-XeonE5-1650v4 | 6x3.6GH | 32Gb | Linux(Fedora) | general | 325-interac-lab | 2UA37321Q2S  | c8:d3:ff:ba:5d:28
+|129|sardine	     | HP-Z440-XeonE5-1650v4 | 6x3.6GH | 32Gb | Linux(Fedora) | general | 325-interac-lab | 2UA37321Q3B  | c8:d3:ff:be:84:1b
+|130|shark	     | HP-Z440-XeonE5-1650v4 | 6x3.6GH | 32Gb | Linux(Fedora) | general | 325-interac-lab | 2UA37321Q37  | c8:d3:ff:be:84:22
+|131|sole	     | HP-Z440-XeonE5-1650v4 | 6x3.6GH | 32Gb | Linux(Fedora) | general | 325-interac-lab | 2UA37321Q2M  | c8:d3:ff:be:81:82
+|132|swordfish	     | HP-Z440-XeonE5-1650v4 | 6x3.6GH | 32Gb | Linux(Fedora) | general | 325-interac-lab | 2UA37321Q2K  | c8:d3:ff:be:81:81
+|133|tarpon	     | HP-Z440-XeonE5-1650v4 | 6x3.6GH | 32Gb | Linux(Fedora) | general | 325-interac-lab | 2UA37321Q31  | c8:d3:ff:be:84:28
+|134|turbot	     | HP-Z440-XeonE5-1650v4 | 6x3.6GH | 32Gb | Linux(Fedora) | general | 325-interac-lab | 2UA37321Q38  | c8:d3:ff:be:84:14
+|135|tuna	     | HP-Z440-XeonE5-1650v4 | 6x3.6GH | 32Gb | Linux(Fedora) | general | 325-interac-lab | 2UA37321Q2Q  | c8:d3:ff:ba:5d:27
+|136|wahoo	     | HP-Z440-XeonE5-1650v4 | 6x3.6GH | 32Gb | Linux(Fedora) | general | 325-interac-lab | 2UA37321Q33  | c8:d3:ff:be:84:1f
+================================================================================================================================================
+"
+read -p "Go back to main use ( go ): " go
+
+if [ "$go" = "go" ];
+then 
+&>/dev/null
+fi
+fi
+
+
+
+if [ "$input" = "exit" ] || [ "$input" = "exit()" ] || [ "$input" = "exit(1)" ] || [ "$input" = "q" ] || [ "$input" = "quit" ] || [ "$input" = "quit()" ] || [ "$input" = "quit(1)" ] || [ "$input" = "stop" ];
+	then
+	exit 1 
+	fi
+
+
+done
